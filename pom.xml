@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.marschall</groupId>
@@ -9,7 +10,7 @@
   <url>https://github.com/marschall/micrometer-jfr</url>
   <name>Micrometer JFR</name>
   <description>A Micrometer meter registry that generates JFR events</description>
-  
+
   <developers>
     <developer>
       <id>marschall</id>
@@ -22,7 +23,7 @@
       </roles>
     </developer>
   </developers>
-  
+
   <licenses>
     <license>
       <name>MIT</name>
@@ -30,27 +31,38 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  
+
   <scm>
     <connection>scm:git:git@github.com:marschall/micrometer-jfr.git</connection>
     <developerConnection>scm:git:git@github.com:marschall/micrometer-jfr.git</developerConnection>
     <url>${project.url}</url>
     <tag>HEAD</tag>
   </scm>
-  
+
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-            <release>11</release>
+          <release>11</release>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <!-- JBoss Modules dependency for when running in WildFly -->
+              <Dependencies>jdk.jfr</Dependencies>
+            </manifestEntries>
+          </archive>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://docs.oracle.com/javase/8/docs/api/</link>
+            <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
           </links>
           <source>11</source>
         </configuration>
@@ -185,7 +197,7 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
-  
+
   <profiles>
     <profile>
       <id>deploy-to-sonatype-oss</id>
