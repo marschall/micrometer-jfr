@@ -1,9 +1,15 @@
 package com.github.marschall.micrometer.jfr;
 
+import java.util.List;
+
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
+import jdk.jfr.AnnotationElement;
+import jdk.jfr.Description;
 import jdk.jfr.Event;
+import jdk.jfr.Label;
+import jdk.jfr.ValueDescriptor;
 
 final class JfrDistributionSummary extends AbstractJfrMeter implements DistributionSummary {
 
@@ -19,6 +25,26 @@ final class JfrDistributionSummary extends AbstractJfrMeter implements Distribut
   }
 
   @Override
+  protected List<ValueDescriptor> getAdditionalValueDescriptors() {
+    List<AnnotationElement> amountAnnotations = List.of(
+            new AnnotationElement(Label.class, "Amount"),
+            new AnnotationElement(Description.class, "Amount for an event being measured."));
+    ValueDescriptor amountDescriptor = new ValueDescriptor(double.class, "amount", amountAnnotations);
+
+    return List.of(amountDescriptor);
+  }
+
+  Event newEvent(double amount) {
+   Event event = this.newEmptyEvent();
+    int attributeIndex = 0;
+
+    attributeIndex = this.setCommonEventAttributes(event, attributeIndex);
+    event.set(attributeIndex++, amount);
+
+    return event;
+  }
+
+  @Override
   public HistogramSnapshot takeSnapshot() {
     return HistogramSnapshot.empty(this.count(), this.totalAmount(), this.max());
   }
@@ -28,8 +54,7 @@ final class JfrDistributionSummary extends AbstractJfrMeter implements Distribut
     double value = amount * this.scale;
     this.statistics.record(value);
 
-    Event event = this.newEvent();
-    // TODO set value
+    Event event = this.newEvent(value);
     event.commit();
   }
 

@@ -33,6 +33,7 @@ final class JfrFunctionTimer<T> extends AbstractJfrMeter implements FunctionTime
   public double count() {
     T obj = this.reference.get();
     if (obj != null) {
+      // TODO report
       return this.countFunction.applyAsLong(obj);
     } else {
       return Double.NaN;
@@ -43,6 +44,7 @@ final class JfrFunctionTimer<T> extends AbstractJfrMeter implements FunctionTime
   public double totalTime(TimeUnit destinationUnit) {
     T obj = this.reference.get();
     if (obj != null) {
+      // TODO report
       double totalTime = this.totalTimeFunction.applyAsDouble(obj);
       return TimeUtils.convert(totalTime, this.totalTimeFunctionUnit, destinationUnit);
     } else {
