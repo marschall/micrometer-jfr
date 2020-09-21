@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.marschall</groupId>
   <artifactId>micrometer-jfr</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <inceptionYear>2020</inceptionYear>
   <url>https://github.com/marschall/micrometer-jfr</url>
   <name>Micrometer JFR</name>
@@ -36,7 +35,7 @@
     <connection>scm:git:git@github.com:marschall/micrometer-jfr.git</connection>
     <developerConnection>scm:git:git@github.com:marschall/micrometer-jfr.git</developerConnection>
     <url>${project.url}</url>
-    <tag>HEAD</tag>
+    <tag>0.1.0</tag>
   </scm>
 
   <build>
