@@ -41,7 +41,8 @@ final class JfrTimer extends AbstractJfrMeter implements Timer {
         new AnnotationElement(Label.class, "Duration"),
         new AnnotationElement(Description.class, "Duration in " + this.baseTimeUnit),
         new AnnotationElement(Timespan.class, TimeUnitUtils.mapTimeUnitToTimespan(baseTimeUnit)));
-    ValueDescriptor amountDescriptor = new ValueDescriptor(long.class, "duration", amountAnnotations);
+    // "duration" causes an error
+    ValueDescriptor amountDescriptor = new ValueDescriptor(long.class, "meteredDuration", amountAnnotations);
 
     return List.of(amountDescriptor);
   }

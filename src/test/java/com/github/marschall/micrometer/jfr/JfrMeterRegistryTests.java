@@ -44,19 +44,34 @@ class JfrMeterRegistryTests {
   @Test
   void createTimer() {
     Timer timer = createTimer("job", "Job duration",
-            Tag.of("name", "cleanup"),
-            Tag.of("status", "ok")
-            );
+        Tag.of("name", "cleanup"),
+        Tag.of("status", "ok")
+        );
 
     timer.record(Duration.ofMinutes(1L));
   }
 
   @Test
+  void testcreateTimerSample() throws Exception {
+
+    Timer.Sample timerSample = createTimerSample();
+
+    Timer timer = createTimer("job", "Job duration",
+        Tag.of("name", "cleanup"),
+        Tag.of("status", "ok")
+        );
+
+    Thread.sleep(500L);
+
+    timerSample.stop(timer);
+  }
+
+  @Test
   void createCounter() {
     Counter counter = createCounter("jobs", "Job Count",
-            Tag.of("name", "cleanup"),
-            Tag.of("status", "ok")
-            );
+        Tag.of("name", "cleanup"),
+        Tag.of("status", "ok")
+        );
 
     counter.increment();
     counter.increment();
@@ -65,9 +80,9 @@ class JfrMeterRegistryTests {
   @Test
   void createMeter() {
     Meter meter = createMeter("jobStats", "Job Statistics", Type.GAUGE, List.of(new Measurement(() -> 1.0d, Statistic.VALUE)),
-            Tag.of("name", "cleanup"),
-            Tag.of("status", "ok")
-            );
+        Tag.of("name", "cleanup"),
+        Tag.of("status", "ok")
+        );
 
     meter.measure();
   }
@@ -75,9 +90,9 @@ class JfrMeterRegistryTests {
   @Test
   void createDistributionSummary() {
     DistributionSummary distributionSummary = createDistributionSummary("memoryStats", "Memory Statistics",
-            Tag.of("name", "cleanup"),
-            Tag.of("status", "ok")
-            );
+        Tag.of("name", "cleanup"),
+        Tag.of("status", "ok")
+        );
 
     distributionSummary.record(55.0d);
   }
@@ -86,9 +101,9 @@ class JfrMeterRegistryTests {
   void createGauge() {
     AtomicLong diskUsage = new AtomicLong();
     Gauge gauge = createGauge("diskusage", "Disk Usage", diskUsage, AtomicLong::doubleValue,
-            Tag.of("name", "cleanup"),
-            Tag.of("status", "ok")
-            );
+        Tag.of("name", "cleanup"),
+        Tag.of("status", "ok")
+        );
 
     diskUsage.set(1_234_567L);
     double value = gauge.value();
@@ -99,9 +114,9 @@ class JfrMeterRegistryTests {
   void createFunctionCounter() {
     AtomicLong progress = new AtomicLong();
     FunctionCounter functionCounter = createFunctionCounter("progress", "Progress", progress, AtomicLong::doubleValue,
-            Tag.of("name", "cleanup"),
-            Tag.of("status", "ok")
-            );
+        Tag.of("name", "cleanup"),
+        Tag.of("status", "ok")
+        );
 
     progress.set(20);
     functionCounter.count();
@@ -115,15 +130,6 @@ class JfrMeterRegistryTests {
 
     LongTaskTimer.Sample longTaskTimerSample = longTaskTimer.start();
 
-    Timer.Sample timerSample = createTimerSample();
-
-    Thread.sleep(500L);
-
-    timerSample.stop(createTimer("job", "Job duration",
-            Tag.of("name", "cleanup"),
-            Tag.of("status", "ok")
-        ));
-
     Thread.sleep(500L);
 
     longTaskTimerSample.stop();
@@ -131,44 +137,44 @@ class JfrMeterRegistryTests {
 
   private static Timer createTimer(String name, String description, Tag... tags) {
     return Timer.builder(METRICS_PREFIX + name)
-            .description(description)
-            .tags(List.of(tags))
-            .register(Metrics.globalRegistry);
+        .description(description)
+        .tags(List.of(tags))
+        .register(Metrics.globalRegistry);
   }
 
   private static Meter createMeter(String name, String description, Type type, Iterable<Measurement> measurements, Tag... tags) {
     return Meter.builder(METRICS_PREFIX + name, type, measurements)
-            .description(description)
-            .tags(List.of(tags))
-            .register(Metrics.globalRegistry);
+        .description(description)
+        .tags(List.of(tags))
+        .register(Metrics.globalRegistry);
   }
 
   private static Counter createCounter(String name, String description, Tag... tags) {
     return Counter.builder(METRICS_PREFIX + name)
-            .description(description)
-            .tags(List.of(tags))
-            .register(Metrics.globalRegistry);
+        .description(description)
+        .tags(List.of(tags))
+        .register(Metrics.globalRegistry);
   }
 
   private static <T> Gauge createGauge(String name, String description, T obj, ToDoubleFunction<T> valueFunction, Tag... tags) {
     return Gauge.builder(METRICS_PREFIX + name, obj, valueFunction)
-            .description(description)
-            .tags(List.of(tags))
-            .register(Metrics.globalRegistry);
+        .description(description)
+        .tags(List.of(tags))
+        .register(Metrics.globalRegistry);
   }
 
   private static DistributionSummary createDistributionSummary(String name, String description, Tag... tags) {
     return DistributionSummary.builder(METRICS_PREFIX + name)
-            .description(description)
-            .tags(List.of(tags))
-            .register(Metrics.globalRegistry);
+        .description(description)
+        .tags(List.of(tags))
+        .register(Metrics.globalRegistry);
   }
 
   private static <T> FunctionCounter createFunctionCounter(String name, String description, T obj, ToDoubleFunction<T> valueFunction, Tag... tags) {
     return FunctionCounter.builder(METRICS_PREFIX + name, obj, valueFunction)
-            .description(description)
-            .tags(List.of(tags))
-            .register(Metrics.globalRegistry);
+        .description(description)
+        .tags(List.of(tags))
+        .register(Metrics.globalRegistry);
   }
 
   private static Timer.Sample createTimerSample() {
@@ -177,9 +183,9 @@ class JfrMeterRegistryTests {
 
   private static LongTaskTimer createLongTaskTimer(String name, String description, Tag... tags) {
     return LongTaskTimer.builder(METRICS_PREFIX + name)
-            .description(description)
-            .tags(List.of(tags))
-            .register(Metrics.globalRegistry);
+        .description(description)
+        .tags(List.of(tags))
+        .register(Metrics.globalRegistry);
   }
 
 }

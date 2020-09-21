@@ -39,7 +39,8 @@ final class JfrLongTaskTimer extends AbstractJfrMeter implements LongTaskTimer {
         new AnnotationElement(Label.class, "Duration"),
         new AnnotationElement(Description.class, "Duration in " + baseTimeUnit),
         new AnnotationElement(Timespan.class, TimeUnitUtils.mapTimeUnitToTimespan(baseTimeUnit)));
-    ValueDescriptor amountDescriptor = new ValueDescriptor(long.class, "duration", amountAnnotations);
+    // "duration" causes an error
+    ValueDescriptor amountDescriptor = new ValueDescriptor(long.class, "meteredDuration", amountAnnotations);
 
     return List.of(amountDescriptor);
   }
