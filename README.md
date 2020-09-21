@@ -16,3 +16,8 @@ Features
 - Converts tags (key value pairs) into JFR event attributes.
 - Generates a JFR event for every metered value.
 
+
+Issues
+------
+
+- The count of `FunctionCounter` is currently not reported.
