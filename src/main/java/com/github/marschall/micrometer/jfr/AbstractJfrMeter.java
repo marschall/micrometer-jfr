@@ -44,7 +44,7 @@ abstract class AbstractJfrMeter implements Meter {
 
     fields.addAll(this.getTagValueDescriptors(id));
 
-    fields.addAll(this.getAdditionalValueDescriptors(baseTimeUnit));
+    fields.addAll(this.getAdditionalValueDescriptors(id, baseTimeUnit));
 
     List<AnnotationElement> eventAnnotations = this.getEventAnnotations(id);
 
@@ -85,7 +85,7 @@ abstract class AbstractJfrMeter implements Meter {
     return eventAnnotations;
   }
 
-  protected List<ValueDescriptor> getAdditionalValueDescriptors(TimeUnit baseTimeUnit) {
+  protected List<ValueDescriptor> getAdditionalValueDescriptors(Id id, TimeUnit baseTimeUnit) {
     return List.of();
   }
 

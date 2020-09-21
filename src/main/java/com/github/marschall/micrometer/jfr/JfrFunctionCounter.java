@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.ToDoubleFunction;
 
 import io.micrometer.core.instrument.FunctionCounter;
+import io.micrometer.core.instrument.Meter.Id;
 import jdk.jfr.AnnotationElement;
 import jdk.jfr.Description;
 import jdk.jfr.Event;
@@ -25,7 +26,7 @@ final class JfrFunctionCounter<T> extends AbstractJfrMeter implements FunctionCo
   }
 
   @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors(TimeUnit baseTimeUnit) {
+  protected List<ValueDescriptor> getAdditionalValueDescriptors(Id id, TimeUnit baseTimeUnit) {
     List<AnnotationElement> incrementAnnotations = List.of(
             new AnnotationElement(Label.class, "Count"),
             new AnnotationElement(Description.class, "The cumulative count since this counter was created."));

@@ -8,9 +8,9 @@ import jdk.jfr.DataAmount;
 import jdk.jfr.Timespan;
 import jdk.jfr.Percentage;
 
-final class BaseUnitsUtil {
+final class BaseUnitUtils {
 
-  private BaseUnitsUtil() {
+  private BaseUnitUtils() {
     throw new AssertionError("not instantiable");
   }
 

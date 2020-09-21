@@ -1,7 +1,9 @@
 package com.github.marschall.micrometer.jfr;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.ToDoubleFunction;
 
@@ -25,11 +27,14 @@ final class JfrGauge<T> extends AbstractJfrMeter implements Gauge {
   }
 
   @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors(TimeUnit baseTimeUnit) {
-    // TODO use BaseUnits form id base unit
-    List<AnnotationElement> valueAnnotations = List.of(
-            new AnnotationElement(Label.class, "Value"),
-            new AnnotationElement(Description.class, "The current value of the gauge."));
+  protected List<ValueDescriptor> getAdditionalValueDescriptors(Id id, TimeUnit baseTimeUnit) {
+    List<AnnotationElement> valueAnnotations = new ArrayList<>(3);
+    valueAnnotations.add(new AnnotationElement(Label.class, "Value"));
+    valueAnnotations.add(new AnnotationElement(Description.class, "The current value of the gauge."));
+    Optional<AnnotationElement> baseUnitAnnotation = BaseUnitUtils.mapToAnnotationElement(id.getBaseUnit());
+    if (baseUnitAnnotation.isPresent()) {
+      valueAnnotations.add(baseUnitAnnotation.get());
+    }
    ValueDescriptor valueDescriptor = new ValueDescriptor(double.class, "value", valueAnnotations);
 
     return List.of(valueDescriptor);

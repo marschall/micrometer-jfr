@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.Meter.Id;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 import io.micrometer.core.instrument.distribution.pause.PauseDetector;
@@ -36,7 +37,7 @@ final class JfrTimer extends AbstractJfrMeter implements Timer {
   }
 
   @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors(TimeUnit baseTimeUnit) {
+  protected List<ValueDescriptor> getAdditionalValueDescriptors(Id id, TimeUnit baseTimeUnit) {
     List<AnnotationElement> amountAnnotations = List.of(
         new AnnotationElement(Label.class, "Duration"),
         new AnnotationElement(Description.class, "Duration in " + this.baseTimeUnit),

@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.LongAdder;
 
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.LongTaskTimer;
+import io.micrometer.core.instrument.Meter.Id;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 import io.micrometer.core.instrument.util.TimeUtils;
@@ -34,7 +35,7 @@ final class JfrLongTaskTimer extends AbstractJfrMeter implements LongTaskTimer {
   }
 
   @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors(TimeUnit baseTimeUnit) {
+  protected List<ValueDescriptor> getAdditionalValueDescriptors(Id id, TimeUnit baseTimeUnit) {
     List<AnnotationElement> amountAnnotations = List.of(
         new AnnotationElement(Label.class, "Duration"),
         new AnnotationElement(Description.class, "Duration in " + baseTimeUnit),

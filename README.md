@@ -14,6 +14,7 @@ Features
 --------
 
 - Converts tags (key value pairs) into JFR event attributes.
+- Basic mapping from some `io.micrometer.core.instrument.binder.BaseUnits` to `jdk.jfr.ContentType`.
 - Generates a JFR event for every metered value.
 
 

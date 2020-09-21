@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.micrometer.core.instrument.DistributionSummary;
+import io.micrometer.core.instrument.Meter.Id;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 import jdk.jfr.AnnotationElement;
@@ -26,7 +27,7 @@ final class JfrDistributionSummary extends AbstractJfrMeter implements Distribut
   }
 
   @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors(TimeUnit baseTimeUnit) {
+  protected List<ValueDescriptor> getAdditionalValueDescriptors(Id id, TimeUnit baseTimeUnit) {
     List<AnnotationElement> amountAnnotations = List.of(
             new AnnotationElement(Label.class, "Amount"),
             new AnnotationElement(Description.class, "Amount for an event being measured."));

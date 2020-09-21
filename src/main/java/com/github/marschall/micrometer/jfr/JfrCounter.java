@@ -1,6 +1,8 @@
 package com.github.marschall.micrometer.jfr;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import io.micrometer.core.instrument.Counter;
@@ -20,17 +22,23 @@ final class JfrCounter extends AbstractJfrMeter implements Counter {
   }
 
   @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors(TimeUnit baseTimeUnit) {
-    List<AnnotationElement> incrementAnnotations = List.of(
-            new AnnotationElement(Label.class, "Increment"),
-            new AnnotationElement(Description.class, "Amount to add to the counter."));
+  protected List<ValueDescriptor> getAdditionalValueDescriptors(Id id, TimeUnit baseTimeUnit) {
+    List<AnnotationElement> incrementAnnotations = new ArrayList<>(3);
+    incrementAnnotations.add(new AnnotationElement(Label.class, "Increment"));
+    incrementAnnotations.add(new AnnotationElement(Description.class, "Amount to add to the counter."));
+    Optional<AnnotationElement> baseUnitAnnotation = BaseUnitUtils.mapToAnnotationElement(id.getBaseUnit());
+    if (baseUnitAnnotation.isPresent()) {
+      incrementAnnotations.add(baseUnitAnnotation.get());
+    }
     ValueDescriptor incrementDescriptor = new ValueDescriptor(double.class, "increment", incrementAnnotations);
 
-    // TODO use BaseUnits form id base unit
-    List<AnnotationElement> valueAnnotations = List.of(
-            new AnnotationElement(Label.class, "Value"),
-            new AnnotationElement(Description.class, "The current value of the counter."));
-   ValueDescriptor valueDescriptor = new ValueDescriptor(double.class, "value", valueAnnotations);
+    List<AnnotationElement> valueAnnotations = new ArrayList<>(3);
+    valueAnnotations.add(new AnnotationElement(Label.class, "Value"));
+    valueAnnotations.add(new AnnotationElement(Description.class, "The current value of the counter."));
+    if (baseUnitAnnotation.isPresent()) {
+      valueAnnotations.add(baseUnitAnnotation.get());
+    }
+    ValueDescriptor valueDescriptor = new ValueDescriptor(double.class, "value", valueAnnotations);
 
     return List.of(incrementDescriptor, valueDescriptor);
   }

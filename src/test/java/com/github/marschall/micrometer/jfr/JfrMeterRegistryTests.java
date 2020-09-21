@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.ToDoubleFunction;
+import io.micrometer.core.instrument.binder.BaseUnits;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -57,9 +58,7 @@ class JfrMeterRegistryTests {
     Timer.Sample timerSample = createTimerSample();
 
     Timer timer = createTimer("job", "Job duration",
-        Tag.of("name", "cleanup"),
-        Tag.of("status", "ok")
-        );
+        Tag.of("name", "cleanup"), Tag.of("status", "ok"));
 
     Thread.sleep(500L);
 
@@ -69,9 +68,7 @@ class JfrMeterRegistryTests {
   @Test
   void createCounter() {
     Counter counter = createCounter("jobs", "Job Count",
-        Tag.of("name", "cleanup"),
-        Tag.of("status", "ok")
-        );
+        Tag.of("name", "cleanup"), Tag.of("status", "ok"));
 
     counter.increment();
     counter.increment();
@@ -80,9 +77,7 @@ class JfrMeterRegistryTests {
   @Test
   void createMeter() {
     Meter meter = createMeter("jobStats", "Job Statistics", Type.GAUGE, List.of(new Measurement(() -> 1.0d, Statistic.VALUE)),
-        Tag.of("name", "cleanup"),
-        Tag.of("status", "ok")
-        );
+        Tag.of("name", "cleanup"), Tag.of("status", "ok"));
 
     meter.measure();
   }
@@ -90,9 +85,7 @@ class JfrMeterRegistryTests {
   @Test
   void createDistributionSummary() {
     DistributionSummary distributionSummary = createDistributionSummary("memoryStats", "Memory Statistics",
-        Tag.of("name", "cleanup"),
-        Tag.of("status", "ok")
-        );
+        Tag.of("name", "cleanup"), Tag.of("status", "ok"));
 
     distributionSummary.record(55.0d);
   }
@@ -100,10 +93,8 @@ class JfrMeterRegistryTests {
   @Test
   void createGauge() {
     AtomicLong diskUsage = new AtomicLong();
-    Gauge gauge = createGauge("diskusage", "Disk Usage", diskUsage, AtomicLong::doubleValue,
-        Tag.of("name", "cleanup"),
-        Tag.of("status", "ok")
-        );
+    Gauge gauge = createGauge("diskusage", "Disk Usage", diskUsage, AtomicLong::doubleValue, BaseUnits.BYTES,
+        Tag.of("name", "cleanup"), Tag.of("status", "ok"));
 
     diskUsage.set(1_234_567L);
     double value = gauge.value();
@@ -114,9 +105,7 @@ class JfrMeterRegistryTests {
   void createFunctionCounter() {
     AtomicLong progress = new AtomicLong();
     FunctionCounter functionCounter = createFunctionCounter("progress", "Progress", progress, AtomicLong::doubleValue,
-        Tag.of("name", "cleanup"),
-        Tag.of("status", "ok")
-        );
+        Tag.of("name", "cleanup"), Tag.of("status", "ok"));
 
     progress.set(20);
     functionCounter.count();
@@ -156,9 +145,10 @@ class JfrMeterRegistryTests {
         .register(Metrics.globalRegistry);
   }
 
-  private static <T> Gauge createGauge(String name, String description, T obj, ToDoubleFunction<T> valueFunction, Tag... tags) {
+  private static <T> Gauge createGauge(String name, String description, T obj, ToDoubleFunction<T> valueFunction, String baseUnit, Tag... tags) {
     return Gauge.builder(METRICS_PREFIX + name, obj, valueFunction)
         .description(description)
+        .baseUnit(baseUnit)
         .tags(List.of(tags))
         .register(Metrics.globalRegistry);
   }
