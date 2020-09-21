@@ -21,7 +21,7 @@ final class JfrFunctionTimer<T> extends AbstractJfrMeter implements FunctionTime
           ToDoubleFunction<T> totalTimeFunction,
           TimeUnit totalTimeFunctionUnit,
           TimeUnit baseTimeUnit) {
-    super(id);
+    super(id, baseTimeUnit);
     this.reference = new WeakReference<>(obj);
     this.countFunction = countFunction;
     this.totalTimeFunction = totalTimeFunction;

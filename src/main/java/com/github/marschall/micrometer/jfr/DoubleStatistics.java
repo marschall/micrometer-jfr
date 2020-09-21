@@ -4,6 +4,9 @@ import java.util.concurrent.atomic.DoubleAccumulator;
 import java.util.concurrent.atomic.DoubleAdder;
 import java.util.concurrent.atomic.LongAdder;
 
+/**
+ * A minimal statistics implementation for {@code double} values.
+ */
 final class DoubleStatistics {
 
   private final LongAdder count;

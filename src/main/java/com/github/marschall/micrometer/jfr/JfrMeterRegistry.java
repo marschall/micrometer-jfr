@@ -56,12 +56,12 @@ public final class JfrMeterRegistry extends MeterRegistry {
 
   @Override
   protected Timer newTimer(Id id, DistributionStatisticConfig distributionStatisticConfig, PauseDetector pauseDetector) {
-    return new JfrTimer(id, distributionStatisticConfig, pauseDetector, this.getBaseTimeUnit());
+    return new JfrTimer(id, distributionStatisticConfig, pauseDetector, this.getBaseTimeUnit(), this.clock);
   }
 
   @Override
   protected LongTaskTimer newLongTaskTimer(Id id, DistributionStatisticConfig distributionStatisticConfig) {
-    return new JfrLongTaskTimer(id, distributionStatisticConfig, this.getBaseTimeUnit());
+    return new JfrLongTaskTimer(id, distributionStatisticConfig, this.getBaseTimeUnit(), this.clock);
   }
 
   @Override

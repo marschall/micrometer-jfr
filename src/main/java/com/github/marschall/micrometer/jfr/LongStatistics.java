@@ -3,6 +3,9 @@ package com.github.marschall.micrometer.jfr;
 import java.util.concurrent.atomic.LongAccumulator;
 import java.util.concurrent.atomic.LongAdder;
 
+/**
+ * A minimal statistics implementation for {@code long} values.
+ */
 final class LongStatistics {
 
   private final LongAdder count;

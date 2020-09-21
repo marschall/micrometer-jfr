@@ -1,6 +1,7 @@
 package com.github.marschall.micrometer.jfr;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.micrometer.core.instrument.Counter;
 import jdk.jfr.AnnotationElement;
@@ -19,12 +20,13 @@ final class JfrCounter extends AbstractJfrMeter implements Counter {
   }
 
   @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors() {
+  protected List<ValueDescriptor> getAdditionalValueDescriptors(TimeUnit baseTimeUnit) {
     List<AnnotationElement> incrementAnnotations = List.of(
             new AnnotationElement(Label.class, "Increment"),
             new AnnotationElement(Description.class, "Amount to add to the counter."));
     ValueDescriptor incrementDescriptor = new ValueDescriptor(double.class, "increment", incrementAnnotations);
 
+    // TODO use BaseUnits form id base unit
     List<AnnotationElement> valueAnnotations = List.of(
             new AnnotationElement(Label.class, "Value"),
             new AnnotationElement(Description.class, "The current value of the counter."));
@@ -56,7 +58,7 @@ final class JfrCounter extends AbstractJfrMeter implements Counter {
 
   @Override
   public double count() {
-    return this.value.getValue();
+    return this.value.doubleValue();
   }
 
 }

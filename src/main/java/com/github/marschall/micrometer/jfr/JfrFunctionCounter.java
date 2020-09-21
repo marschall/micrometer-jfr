@@ -2,6 +2,7 @@ package com.github.marschall.micrometer.jfr;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.ToDoubleFunction;
 
 import io.micrometer.core.instrument.FunctionCounter;
@@ -24,7 +25,7 @@ final class JfrFunctionCounter<T> extends AbstractJfrMeter implements FunctionCo
   }
 
   @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors() {
+  protected List<ValueDescriptor> getAdditionalValueDescriptors(TimeUnit baseTimeUnit) {
     List<AnnotationElement> incrementAnnotations = List.of(
             new AnnotationElement(Label.class, "Count"),
             new AnnotationElement(Description.class, "The cumulative count since this counter was created."));
