@@ -1,4 +1,4 @@
-Micrometer JFR
+Micrometer JFR [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/micrometer-jfr/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/micrometer-jfr) [![Javadocs](https://www.javadoc.io/badge/com.github.marschall/micrometer-jfr.svg)](https://www.javadoc.io/doc/com.github.marschall/micrometer-jfr)
 ==============
 
 A [Micrometer](https://micrometer.io/) meter registry that generates [JFR](https://openjdk.java.net/jeps/328) events
@@ -8,6 +8,13 @@ Usage
 
 ```java
 Metrics.addRegistry(new JfrMeterRegistry());
+```
+```xml
+<dependency>
+  <groupId>com.github.marschall</groupId>
+  <artifactId>micrometer-jfr</artifactId>
+  <version>0.1.0</version>
+</dependency>
 ```
 
 Features
