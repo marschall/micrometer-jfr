@@ -23,7 +23,7 @@ final class GaugeEventFactory extends AbstractMeterEventFactory {
     List<AnnotationElement> valueAnnotations = new ArrayList<>(3);
     valueAnnotations.add(new AnnotationElement(Label.class, "Value"));
     valueAnnotations.add(new AnnotationElement(Description.class, "The current value of the gauge."));
-    Optional<AnnotationElement> baseUnitAnnotation = BaseUnitUtils.mapToAnnotationElement(id.getBaseUnit());
+    Optional<AnnotationElement> baseUnitAnnotation = this.getAnnotationElementOfBaseUnit();
     if (baseUnitAnnotation.isPresent()) {
       valueAnnotations.add(baseUnitAnnotation.get());
     }

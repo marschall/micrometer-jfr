@@ -23,7 +23,7 @@ final class CounterEventFactory extends AbstractMeterEventFactory {
     List<AnnotationElement> incrementAnnotations = new ArrayList<>(3);
     incrementAnnotations.add(new AnnotationElement(Label.class, "Increment"));
     incrementAnnotations.add(new AnnotationElement(Description.class, "Amount to add to the counter."));
-    Optional<AnnotationElement> baseUnitAnnotation = BaseUnitUtils.mapToAnnotationElement(id.getBaseUnit());
+    Optional<AnnotationElement> baseUnitAnnotation = this.getAnnotationElementOfBaseUnit();
     if (baseUnitAnnotation.isPresent()) {
       incrementAnnotations.add(baseUnitAnnotation.get());
     }

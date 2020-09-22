@@ -2,19 +2,24 @@ package com.github.marschall.micrometer.jfr;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import io.micrometer.core.instrument.Meter.Id;
+import io.micrometer.core.instrument.binder.BaseUnits;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.lang.Nullable;
 import jdk.jfr.AnnotationElement;
 import jdk.jfr.Category;
+import jdk.jfr.DataAmount;
 import jdk.jfr.Description;
 import jdk.jfr.Event;
 import jdk.jfr.EventFactory;
 import jdk.jfr.Label;
 import jdk.jfr.Name;
+import jdk.jfr.Percentage;
 import jdk.jfr.StackTrace;
+import jdk.jfr.Timespan;
 import jdk.jfr.ValueDescriptor;
 
 /**
@@ -139,6 +144,26 @@ abstract class AbstractMeterEventFactory {
       event.set(attributeIndex++, tag.getValue());
     }
     return attributeIndex;
+  }
+
+  Optional<AnnotationElement> getAnnotationElementOfBaseUnit() {
+    return mapToAnnotationElement(this.id.getBaseUnit());
+  }
+
+  static Optional<AnnotationElement> mapToAnnotationElement(String baseUnit) {
+    if (baseUnit == null) {
+      return Optional.empty();
+    }
+    switch (baseUnit) {
+    case BaseUnits.BYTES:
+      return Optional.of(new AnnotationElement(DataAmount.class, DataAmount.BYTES));
+    case BaseUnits.MILLISECONDS:
+      return Optional.of(new AnnotationElement(Timespan.class, Timespan.MILLISECONDS));
+    case BaseUnits.PERCENT:
+      return Optional.of(new AnnotationElement(Percentage.class));
+    default:
+      return Optional.empty();
+    }
   }
 
 }
