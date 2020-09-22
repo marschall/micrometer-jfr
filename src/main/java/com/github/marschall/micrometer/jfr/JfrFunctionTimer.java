@@ -8,7 +8,7 @@ import java.util.function.ToLongFunction;
 import io.micrometer.core.instrument.FunctionTimer;
 import io.micrometer.core.instrument.util.TimeUtils;
 
-final class JfrFunctionTimer<T> extends AbstractJfrMeter implements FunctionTimer {
+final class JfrFunctionTimer<T> extends AbstractJfrMeter<FunctionTimerEventFactory> implements FunctionTimer {
 
   private final WeakReference<T> reference;
   private final ToLongFunction<T> countFunction;
@@ -21,7 +21,7 @@ final class JfrFunctionTimer<T> extends AbstractJfrMeter implements FunctionTime
           ToDoubleFunction<T> totalTimeFunction,
           TimeUnit totalTimeFunctionUnit,
           TimeUnit baseTimeUnit) {
-    super(id, baseTimeUnit);
+    super(id, new FunctionTimerEventFactory(id, baseTimeUnit));
     this.reference = new WeakReference<>(obj);
     this.countFunction = countFunction;
     this.totalTimeFunction = totalTimeFunction;

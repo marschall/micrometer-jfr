@@ -1,49 +1,24 @@
 package com.github.marschall.micrometer.jfr;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import io.micrometer.core.instrument.DistributionSummary;
-import io.micrometer.core.instrument.Meter.Id;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
-import jdk.jfr.AnnotationElement;
-import jdk.jfr.Description;
 import jdk.jfr.Event;
-import jdk.jfr.Label;
-import jdk.jfr.ValueDescriptor;
 
-final class JfrDistributionSummary extends AbstractJfrMeter implements DistributionSummary {
+final class JfrDistributionSummary extends AbstractJfrMeter<DistributionSummaryEventFactory> implements DistributionSummary {
 
   private final DistributionStatisticConfig distributionStatisticConfig;
   private final double scale;
   private final DoubleStatistics statistics;
 
   JfrDistributionSummary(Id id, DistributionStatisticConfig distributionStatisticConfig, double scale) {
-    super(id);
+    super(id, new DistributionSummaryEventFactory(id));
     this.distributionStatisticConfig = distributionStatisticConfig;
     this.scale = scale;
     this.statistics = new DoubleStatistics();
   }
-
-  @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors(Id id, TimeUnit baseTimeUnit) {
-    List<AnnotationElement> amountAnnotations = List.of(
-            new AnnotationElement(Label.class, "Amount"),
-            new AnnotationElement(Description.class, "Amount for an event being measured."));
-    ValueDescriptor amountDescriptor = new ValueDescriptor(double.class, "amount", amountAnnotations);
-
-    return List.of(amountDescriptor);
-  }
-
-  Event newEvent(double amount) {
-   Event event = this.newEmptyEvent();
-    int attributeIndex = 0;
-
-    attributeIndex = this.setCommonEventAttributes(event, attributeIndex);
-    event.set(attributeIndex++, amount);
-
-    return event;
+  Event newEvent(double value) {
+    return this.meterEventFactory.newEvent(this.jfrEventFactory, value);
   }
 
   @Override

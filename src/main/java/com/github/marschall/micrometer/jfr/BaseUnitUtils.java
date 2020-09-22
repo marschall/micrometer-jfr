@@ -5,8 +5,8 @@ import java.util.Optional;
 import io.micrometer.core.instrument.binder.BaseUnits;
 import jdk.jfr.AnnotationElement;
 import jdk.jfr.DataAmount;
-import jdk.jfr.Timespan;
 import jdk.jfr.Percentage;
+import jdk.jfr.Timespan;
 
 final class BaseUnitUtils {
 

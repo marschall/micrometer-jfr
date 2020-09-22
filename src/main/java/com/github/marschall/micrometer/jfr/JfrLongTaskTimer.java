@@ -1,23 +1,16 @@
 package com.github.marschall.micrometer.jfr;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.LongTaskTimer;
-import io.micrometer.core.instrument.Meter.Id;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 import io.micrometer.core.instrument.util.TimeUtils;
-import jdk.jfr.AnnotationElement;
-import jdk.jfr.Description;
 import jdk.jfr.Event;
-import jdk.jfr.Label;
-import jdk.jfr.Timespan;
-import jdk.jfr.ValueDescriptor;
 
-final class JfrLongTaskTimer extends AbstractJfrMeter implements LongTaskTimer {
+final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory> implements LongTaskTimer {
 
   private final DistributionStatisticConfig distributionStatisticConfig;
   private final TimeUnit baseTimeUnit;
@@ -26,7 +19,7 @@ final class JfrLongTaskTimer extends AbstractJfrMeter implements LongTaskTimer {
   private final Clock clock;
 
   JfrLongTaskTimer(Id id, DistributionStatisticConfig distributionStatisticConfig, TimeUnit baseTimeUnit, Clock clock) {
-    super(id, baseTimeUnit);
+    super(id, new LongTaskTimerEventFactory(id, baseTimeUnit));
     this.distributionStatisticConfig = distributionStatisticConfig;
     this.baseTimeUnit = baseTimeUnit;
     this.clock = clock;
@@ -34,30 +27,12 @@ final class JfrLongTaskTimer extends AbstractJfrMeter implements LongTaskTimer {
     this.activeTasks = new LongAdder();
   }
 
-  @Override
-  protected List<ValueDescriptor> getAdditionalValueDescriptors(Id id, TimeUnit baseTimeUnit) {
-    List<AnnotationElement> amountAnnotations = List.of(
-        new AnnotationElement(Label.class, "Duration"),
-        new AnnotationElement(Description.class, "Duration in " + baseTimeUnit),
-        new AnnotationElement(Timespan.class, TimeUnitUtils.mapTimeUnitToTimespan(baseTimeUnit)));
-    // "duration" causes an error
-    ValueDescriptor amountDescriptor = new ValueDescriptor(long.class, "meteredDuration", amountAnnotations);
-
-    return List.of(amountDescriptor);
-  }
-
   Event newEvent(long duration) {
-    Event event = this.newEmptyEvent();
-
-    this.setEventAttributes(duration, event);
-
-    return event;
+    return this.meterEventFactory.newEvent(this.jfrEventFactory, duration);
   }
 
-  private void setEventAttributes(long duration, Event event) {
-    int attributeIndex = 0;
-    attributeIndex = this.setCommonEventAttributes(event, attributeIndex);
-    event.set(attributeIndex++, duration);
+  void setEventAttributes(long duration, Event event) {
+    this.meterEventFactory.setEventAttributes(duration, event);
   }
 
   @Override
