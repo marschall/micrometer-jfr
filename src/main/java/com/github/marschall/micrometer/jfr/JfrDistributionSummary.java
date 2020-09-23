@@ -3,9 +3,8 @@ package com.github.marschall.micrometer.jfr;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
-import jdk.jfr.Event;
 
-final class JfrDistributionSummary extends AbstractJfrMeter<DistributionSummaryEventFactory> implements DistributionSummary {
+final class JfrDistributionSummary extends AbstractJfrMeter<DistributionSummaryEventFactory, JfrDistributionSummaryEvent> implements DistributionSummary {
 
   private final DistributionStatisticConfig distributionStatisticConfig;
   private final double scale;
@@ -16,9 +15,6 @@ final class JfrDistributionSummary extends AbstractJfrMeter<DistributionSummaryE
     this.distributionStatisticConfig = distributionStatisticConfig;
     this.scale = scale;
     this.statistics = new DoubleStatistics();
-  }
-  Event newEvent(double value) {
-    return this.meterEventFactory.newEvent(this.jfrEventFactory, value);
   }
 
   @Override
@@ -31,7 +27,8 @@ final class JfrDistributionSummary extends AbstractJfrMeter<DistributionSummaryE
     double value = amount * this.scale;
     this.statistics.record(value);
 
-    Event event = this.newEvent(value);
+    JfrDistributionSummaryEvent event = this.newEmptyEvent();
+    event.setAmount(value);
     event.commit();
   }
 

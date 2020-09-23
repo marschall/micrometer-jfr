@@ -6,14 +6,13 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import io.micrometer.core.instrument.Meter.Id;
-import io.micrometer.core.instrument.binder.BaseUnits;
 import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.binder.BaseUnits;
 import io.micrometer.core.lang.Nullable;
 import jdk.jfr.AnnotationElement;
 import jdk.jfr.Category;
 import jdk.jfr.DataAmount;
 import jdk.jfr.Description;
-import jdk.jfr.Event;
 import jdk.jfr.EventFactory;
 import jdk.jfr.Label;
 import jdk.jfr.Name;
@@ -23,10 +22,10 @@ import jdk.jfr.Timespan;
 import jdk.jfr.ValueDescriptor;
 
 /**
- * Support class for generating an {@link EventFactory} and setting attributes of events.
- *
+ * Support class for generating an {@link EventFactory} and setting attributes of
+ * event definitions.
  */
-abstract class AbstractMeterEventFactory {
+abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
 
   protected final Id id;
 
@@ -42,19 +41,7 @@ abstract class AbstractMeterEventFactory {
     this.baseTimeUnit = baseTimeUnit;
   }
 
-  Event newEvent(EventFactory eventFactory) {
-    Event event = this.newEmptyEvent(eventFactory);
-
-    int attributeIndex = 0;
-
-    attributeIndex = this.setCommonEventAttributes(event, attributeIndex);
-
-    return event;
-  }
-
-  Event newEmptyEvent(EventFactory eventFactory) {
-    return eventFactory.newEvent();
-  }
+  abstract E newEmptyEvent(EventFactory eventFactory);
 
   EventFactory newEventFactory() {
 
@@ -114,43 +101,11 @@ abstract class AbstractMeterEventFactory {
     return List.of();
   }
 
-  int setCommonEventAttributes(Event event, int attributeIndex) {
-    attributeIndex = this.setType(event, attributeIndex);
-
-    attributeIndex = this.setBaseUnit(event, attributeIndex);
-
-    attributeIndex = this.setTags(event, attributeIndex);
-
-    return attributeIndex;
-  }
-
-  int setType(Event event, int attributeIndex) {
-    event.set(attributeIndex, this.id.getType().name());
-    return attributeIndex += 1;
-  }
-
-  private int setBaseUnit(Event event, int attributeIndex) {
-    String baseUnit = this.id.getBaseUnit();
-    if (baseUnit != null) {
-      event.set(attributeIndex, baseUnit);
-      return attributeIndex += 1;
-    } else {
-      return attributeIndex;
-    }
-  }
-
-  private int setTags(Event event, int attributeIndex) {
-    for (Tag tag : this.id.getTagsAsIterable()) {
-      event.set(attributeIndex++, tag.getValue());
-    }
-    return attributeIndex;
-  }
-
   Optional<AnnotationElement> getAnnotationElementOfBaseUnit() {
     return mapToAnnotationElement(this.id.getBaseUnit());
   }
 
-  static Optional<AnnotationElement> mapToAnnotationElement(String baseUnit) {
+  private static Optional<AnnotationElement> mapToAnnotationElement(String baseUnit) {
     if (baseUnit == null) {
       return Optional.empty();
     }

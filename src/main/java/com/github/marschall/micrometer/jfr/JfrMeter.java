@@ -2,9 +2,8 @@ package com.github.marschall.micrometer.jfr;
 
 import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.Meter;
-import jdk.jfr.Event;
 
-final class JfrMeter extends AbstractJfrMeter<MeterEventFactory> implements Meter {
+final class JfrMeter extends AbstractJfrMeter<MeterEventFactory, JfrMeterEvent> implements Meter {
 
   private final Type type;
   private final Iterable<Measurement> measurements;
@@ -17,7 +16,7 @@ final class JfrMeter extends AbstractJfrMeter<MeterEventFactory> implements Mete
 
   @Override
   public Iterable<Measurement> measure() {
-    Event event = this.newEvent();
+    JfrMeterEvent event = this.newEmptyEvent();
     // TODO handle measurements
     // TODO record type?
     // who the type different from the type of the id?

@@ -4,9 +4,8 @@ import java.lang.ref.WeakReference;
 import java.util.function.ToDoubleFunction;
 
 import io.micrometer.core.instrument.Gauge;
-import jdk.jfr.Event;
 
-final class JfrGauge<T> extends AbstractJfrMeter<GaugeEventFactory> implements Gauge {
+final class JfrGauge<T> extends AbstractJfrMeter<GaugeEventFactory, JfrGaugeEvent> implements Gauge {
 
   private final WeakReference<T> reference;
   private final ToDoubleFunction<T> valueFunction;
@@ -18,10 +17,6 @@ final class JfrGauge<T> extends AbstractJfrMeter<GaugeEventFactory> implements G
     this.valueFunction = valueFunction;
   }
 
-  Event newEvent(double value) {
-    return this.meterEventFactory.newEvent(this.jfrEventFactory, value);
-  }
-
   @Override
   public double value() {
     T obj = this.reference.get();
@@ -31,7 +26,8 @@ final class JfrGauge<T> extends AbstractJfrMeter<GaugeEventFactory> implements G
     } else {
       value = Double.NaN;
     }
-    Event event = this.newEvent(value);
+    JfrGaugeEvent event = this.newEmptyEvent();
+    event.setValue(value);
     event.commit();
     return value;
   }

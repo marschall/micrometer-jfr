@@ -10,9 +10,8 @@ import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 import io.micrometer.core.instrument.distribution.pause.PauseDetector;
 import io.micrometer.core.instrument.util.TimeUtils;
-import jdk.jfr.Event;
 
-final class JfrTimer extends AbstractJfrMeter<TimerEventFactory> implements Timer {
+final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> implements Timer {
 
   private final DistributionStatisticConfig distributionStatisticConfig;
   private final PauseDetector pauseDetector;
@@ -29,14 +28,6 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory> implements Time
     this.statistics = new LongStatistics();
   }
 
-  Event newEvent(long duration) {
-    return this.meterEventFactory.newEvent(this.jfrEventFactory, duration);
-  }
-
-  private void setEventAttributes(long duration, Event event) {
-    this.meterEventFactory.setEventAttributes(duration, event);
-  }
-
   @Override
   public HistogramSnapshot takeSnapshot() {
     return HistogramSnapshot.empty(this.count(), this.totalTime(this.baseTimeUnit()), this.max(this.baseTimeUnit()));
@@ -46,7 +37,8 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory> implements Time
   public void record(long amount, TimeUnit unit) {
     long duration = this.baseTimeUnit().convert(amount, unit);
 
-    Event event = this.newEvent(duration);
+    JfrTimerEvent event = this.newEmptyEvent();
+    event.setDuration(duration);
     event.commit();
 
     this.statistics.record(duration);
@@ -54,7 +46,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory> implements Time
 
   @Override
   public <T> T record(Supplier<T> f) {
-    Event event = this.newEmptyEvent();
+    JfrTimerEvent event = this.newEmptyEvent();
     long start = this.clock.monotonicTime();
     event.begin();
     try {
@@ -63,7 +55,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory> implements Time
       event.end();
       long end = this.clock.monotonicTime();
       long duration = end - start;
-      this.setEventAttributes(duration, event);
+      event.setDuration(duration);
       event.commit();
     }
   }
@@ -71,7 +63,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory> implements Time
   @Override
   public <T> T recordCallable(Callable<T> f) throws Exception {
 
-    Event event = this.newEmptyEvent();
+    JfrTimerEvent event = this.newEmptyEvent();
     long start = this.clock.monotonicTime();
     event.begin();
     try {
@@ -80,14 +72,14 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory> implements Time
       event.end();
       long end = this.clock.monotonicTime();
       long duration = end - start;
-      this.setEventAttributes(duration, event);
+      event.setDuration(duration);
       event.commit();
     }
   }
 
   @Override
   public void record(Runnable f) {
-    Event event = this.newEmptyEvent();
+    JfrTimerEvent event = this.newEmptyEvent();
     long start = this.clock.monotonicTime();
     event.begin();
     try {
@@ -96,7 +88,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory> implements Time
       event.end();
       long end = this.clock.monotonicTime();
       long duration = end - start;
-      this.setEventAttributes(duration, event);
+      event.setDuration(duration);
       event.commit();
     }
   }

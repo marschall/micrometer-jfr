@@ -7,12 +7,11 @@ import java.util.Optional;
 import io.micrometer.core.instrument.Meter.Id;
 import jdk.jfr.AnnotationElement;
 import jdk.jfr.Description;
-import jdk.jfr.Event;
 import jdk.jfr.EventFactory;
 import jdk.jfr.Label;
 import jdk.jfr.ValueDescriptor;
 
-final class GaugeEventFactory extends AbstractMeterEventFactory {
+final class GaugeEventFactory extends AbstractMeterEventFactory<JfrGaugeEvent> {
 
   GaugeEventFactory(Id id) {
     super(id);
@@ -32,14 +31,9 @@ final class GaugeEventFactory extends AbstractMeterEventFactory {
     return List.of(valueDescriptor);
   }
 
-  Event newEvent(EventFactory eventFactory, double value) {
-    Event event = this.newEmptyEvent(eventFactory);
-    int attributeIndex = 0;
-
-    attributeIndex = this.setCommonEventAttributes(event, attributeIndex);
-    event.set(attributeIndex++, value);
-
-    return event;
+  @Override
+  JfrGaugeEvent newEmptyEvent(EventFactory eventFactory) {
+    return new JfrGaugeEvent(this.id, eventFactory.newEvent());
   }
 
 }

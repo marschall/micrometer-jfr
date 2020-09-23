@@ -6,7 +6,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.ToDoubleFunction;
-import io.micrometer.core.instrument.binder.BaseUnits;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,6 +23,7 @@ import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Statistic;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.binder.BaseUnits;
 
 class JfrMeterRegistryTests {
 

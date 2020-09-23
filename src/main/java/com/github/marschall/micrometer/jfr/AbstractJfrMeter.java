@@ -1,12 +1,10 @@
 package com.github.marschall.micrometer.jfr;
 
-import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.util.MeterEquivalence;
-import jdk.jfr.Event;
 import jdk.jfr.EventFactory;
 
-abstract class AbstractJfrMeter<F extends AbstractMeterEventFactory> implements Meter {
+abstract class AbstractJfrMeter<F extends AbstractMeterEventFactory<E>, E extends AbstractJfrMeterEvent> implements Meter {
 
   private final Id id;
   protected final F meterEventFactory;
@@ -18,11 +16,7 @@ abstract class AbstractJfrMeter<F extends AbstractMeterEventFactory> implements 
     this.jfrEventFactory = this.meterEventFactory.newEventFactory();
   }
 
-  Event newEvent() {
-    return this.meterEventFactory.newEvent(this.jfrEventFactory);
-  }
-  
-  Event newEmptyEvent() {
+  E newEmptyEvent() {
     return this.meterEventFactory.newEmptyEvent(this.jfrEventFactory);
   }
 
@@ -41,12 +35,6 @@ abstract class AbstractJfrMeter<F extends AbstractMeterEventFactory> implements 
     return this.getClass().getSimpleName() + '(' + this.getId() + ')';
   }
 
-  @Override
-  public Iterable<Measurement> measure() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-  
   @Override
   public boolean equals(Object o) {
     if (o == this) {

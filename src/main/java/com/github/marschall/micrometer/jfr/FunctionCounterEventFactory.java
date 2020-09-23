@@ -5,12 +5,11 @@ import java.util.List;
 import io.micrometer.core.instrument.Meter.Id;
 import jdk.jfr.AnnotationElement;
 import jdk.jfr.Description;
-import jdk.jfr.Event;
 import jdk.jfr.EventFactory;
 import jdk.jfr.Label;
 import jdk.jfr.ValueDescriptor;
 
-final class FunctionCounterEventFactory extends AbstractMeterEventFactory {
+final class FunctionCounterEventFactory extends AbstractMeterEventFactory<JfrFunctionCounterEvent> {
 
   FunctionCounterEventFactory(Id id) {
     super(id);
@@ -26,15 +25,9 @@ final class FunctionCounterEventFactory extends AbstractMeterEventFactory {
     return List.of(incrementDescriptor);
   }
 
-  Event newEvent(EventFactory eventFactory, double count) {
-    Event event = this.newEmptyEvent(eventFactory);
-    int attributeIndex = 0;
-
-    attributeIndex = this.setCommonEventAttributes(event, attributeIndex);
-    event.set(attributeIndex++, count);
-
-    return event;
+  @Override
+  JfrFunctionCounterEvent newEmptyEvent(EventFactory eventFactory) {
+    return new JfrFunctionCounterEvent(this.id, eventFactory.newEvent());
   }
-
 
 }

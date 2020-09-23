@@ -8,9 +8,8 @@ import io.micrometer.core.instrument.LongTaskTimer;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 import io.micrometer.core.instrument.util.TimeUtils;
-import jdk.jfr.Event;
 
-final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory> implements LongTaskTimer {
+final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory, JfrLongTaskTimerEvent> implements LongTaskTimer {
 
   private final DistributionStatisticConfig distributionStatisticConfig;
   private final TimeUnit baseTimeUnit;
@@ -27,14 +26,6 @@ final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory>
     this.activeTasks = new LongAdder();
   }
 
-  Event newEvent(long duration) {
-    return this.meterEventFactory.newEvent(this.jfrEventFactory, duration);
-  }
-
-  void setEventAttributes(long duration, Event event) {
-    this.meterEventFactory.setEventAttributes(duration, event);
-  }
-
   @Override
   public HistogramSnapshot takeSnapshot() {
     return HistogramSnapshot.empty(this.statistics.count(), this.duration(this.baseTimeUnit()), this.max(this.baseTimeUnit()));
@@ -43,7 +34,7 @@ final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory>
   @Override
   public Sample start() {
     this.activeTasks.increment();
-    Event event = this.newEvent();
+    JfrLongTaskTimerEvent event = this.newEmptyEvent();
     long start = this.clock.monotonicTime();
     return new JfrSample(event, start);
   }
@@ -76,11 +67,11 @@ final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory>
 
   final class JfrSample extends Sample {
 
-    private final Event event;
+    private final JfrLongTaskTimerEvent event;
     private final long start;
     private long duration;
 
-    JfrSample(Event event, long start) {
+    JfrSample(JfrLongTaskTimerEvent event, long start) {
       this.event = event;
       this.start = start;
     }
@@ -91,7 +82,7 @@ final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory>
 
       long end = JfrLongTaskTimer.this.clock.monotonicTime();
       this.duration = end - start;
-      JfrLongTaskTimer.this.setEventAttributes(this.duration, this.event);
+      this.event.setDuration(this.duration);
       this.event.commit();
 
       JfrLongTaskTimer.this.decrementActiveTasks();

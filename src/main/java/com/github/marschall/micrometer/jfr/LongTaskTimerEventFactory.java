@@ -6,13 +6,12 @@ import java.util.concurrent.TimeUnit;
 import io.micrometer.core.instrument.Meter.Id;
 import jdk.jfr.AnnotationElement;
 import jdk.jfr.Description;
-import jdk.jfr.Event;
 import jdk.jfr.EventFactory;
 import jdk.jfr.Label;
 import jdk.jfr.Timespan;
 import jdk.jfr.ValueDescriptor;
 
-final class LongTaskTimerEventFactory extends AbstractMeterEventFactory {
+final class LongTaskTimerEventFactory extends AbstractMeterEventFactory<JfrLongTaskTimerEvent> {
 
   LongTaskTimerEventFactory(Id id, TimeUnit baseTimeUnit) {
     super(id, baseTimeUnit);
@@ -30,18 +29,9 @@ final class LongTaskTimerEventFactory extends AbstractMeterEventFactory {
     return List.of(amountDescriptor);
   }
 
-  Event newEvent(EventFactory eventFactory, long duration) {
-    Event event = this.newEmptyEvent(eventFactory);
-
-    this.setEventAttributes(duration, event);
-
-    return event;
-  }
-
-  void setEventAttributes(long duration, Event event) {
-    int attributeIndex = 0;
-    attributeIndex = this.setCommonEventAttributes(event, attributeIndex);
-    event.set(attributeIndex++, duration);
+  @Override
+  JfrLongTaskTimerEvent newEmptyEvent(EventFactory eventFactory) {
+    return new JfrLongTaskTimerEvent(this.id, eventFactory.newEvent());
   }
 
 }
