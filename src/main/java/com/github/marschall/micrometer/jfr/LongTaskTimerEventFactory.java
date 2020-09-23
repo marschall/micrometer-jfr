@@ -22,7 +22,7 @@ final class LongTaskTimerEventFactory extends AbstractMeterEventFactory<JfrLongT
     List<AnnotationElement> amountAnnotations = List.of(
         new AnnotationElement(Label.class, "Duration"),
         new AnnotationElement(Description.class, "Duration in " + this.baseTimeUnit),
-        new AnnotationElement(Timespan.class, TimeUnitUtils.mapTimeUnitToTimespan(this.baseTimeUnit)));
+        new AnnotationElement(Timespan.class, this.getTimespanOfBaseTimeUnit()));
     // "duration" causes an error
     ValueDescriptor amountDescriptor = new ValueDescriptor(long.class, "meteredDuration", amountAnnotations);
 

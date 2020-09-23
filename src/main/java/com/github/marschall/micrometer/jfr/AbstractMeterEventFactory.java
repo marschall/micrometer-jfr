@@ -105,6 +105,25 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
     return mapToAnnotationElement(this.id.getBaseUnit());
   }
 
+  String getTimespanOfBaseTimeUnit() {
+    return mapTimeUnitToTimespan(this.baseTimeUnit);
+  }
+
+  static String mapTimeUnitToTimespan(TimeUnit timeUnit) {
+    switch (timeUnit) {
+    case NANOSECONDS:
+      return Timespan.NANOSECONDS;
+    case MICROSECONDS:
+      return Timespan.MICROSECONDS;
+    case MILLISECONDS:
+      return Timespan.MILLISECONDS;
+    case SECONDS:
+      return Timespan.SECONDS;
+    default:
+      throw new IllegalArgumentException("unsupporte time unit");
+    }
+  }
+
   private static Optional<AnnotationElement> mapToAnnotationElement(String baseUnit) {
     if (baseUnit == null) {
       return Optional.empty();
