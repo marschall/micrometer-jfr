@@ -46,7 +46,9 @@ public final class JfrMeterRegistry extends MeterRegistry {
 
   @Override
   protected <T> Gauge newGauge(Id id, @Nullable T obj, ToDoubleFunction<T> valueFunction) {
-    return new JfrGauge<>(id, obj, valueFunction);
+    Gauge gauge = new JfrGauge<>(id, obj, valueFunction);
+    gauge.value(); // record the initial value
+    return gauge;
   }
 
   @Override
@@ -90,7 +92,9 @@ public final class JfrMeterRegistry extends MeterRegistry {
 
   @Override
   protected <T> FunctionCounter newFunctionCounter(Id id, T obj, ToDoubleFunction<T> countFunction) {
-    return new JfrFunctionCounter<>(id, obj, countFunction);
+    FunctionCounter functionCounter = new JfrFunctionCounter<>(id, obj, countFunction);
+    functionCounter.count(); // record the initial value
+    return functionCounter;
   }
 
   @Override

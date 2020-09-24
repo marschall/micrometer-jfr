@@ -7,13 +7,18 @@ import jdk.jfr.EventFactory;
 abstract class AbstractJfrMeter<F extends AbstractMeterEventFactory<E>, E extends AbstractJfrMeterEvent> implements Meter {
 
   private final Id id;
-  protected final F meterEventFactory;
+  private final F meterEventFactory;
   protected final EventFactory jfrEventFactory;
 
   AbstractJfrMeter(Id id, F meterEventFactory) {
     this.id = id;
     this.meterEventFactory = meterEventFactory;
     this.jfrEventFactory = this.meterEventFactory.newEventFactory();
+    this.registerPriodicEvent(this.jfrEventFactory);
+  }
+  
+  protected void registerPriodicEvent(EventFactory eventFactory) {
+    // empty default implementation
   }
 
   E newEmptyEvent() {
