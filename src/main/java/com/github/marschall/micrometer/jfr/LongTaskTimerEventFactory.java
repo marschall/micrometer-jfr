@@ -19,14 +19,14 @@ final class LongTaskTimerEventFactory extends AbstractMeterEventFactory<JfrLongT
 
   @Override
   protected List<ValueDescriptor> getAdditionalValueDescriptors() {
-    List<AnnotationElement> amountAnnotations = List.of(
+    List<AnnotationElement> durationAnnotations = List.of(
         new AnnotationElement(Label.class, "Duration"),
         new AnnotationElement(Description.class, "Duration in " + this.baseTimeUnit),
         new AnnotationElement(Timespan.class, this.getTimespanOfBaseTimeUnit()));
     // "duration" causes an error
-    ValueDescriptor amountDescriptor = new ValueDescriptor(long.class, "meteredDuration", amountAnnotations);
+    ValueDescriptor durationDescriptor = new ValueDescriptor(long.class, "meteredDuration", durationAnnotations);
 
-    return List.of(amountDescriptor);
+    return List.of(durationDescriptor);
   }
 
   @Override

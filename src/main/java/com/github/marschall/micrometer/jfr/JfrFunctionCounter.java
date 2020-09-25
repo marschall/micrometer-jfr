@@ -31,8 +31,8 @@ final class JfrFunctionCounter<T> extends AbstractJfrMeter<FunctionCounterEventF
 
   @Override
   public void close() {
-    super.close();
     FlightRecorder.removePeriodicEvent(this.hook);
+    super.close();
   }
 
   @Override

@@ -31,8 +31,8 @@ final class JfrGauge<T> extends AbstractJfrMeter<GaugeEventFactory, JfrGaugeEven
 
   @Override
   public void close() {
-    super.close();
     FlightRecorder.removePeriodicEvent(this.hook);
+    super.close();
   }
 
   @Override

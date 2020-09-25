@@ -87,7 +87,9 @@ public final class JfrMeterRegistry extends MeterRegistry {
           ToLongFunction<T> countFunction,
           ToDoubleFunction<T> totalTimeFunction,
           TimeUnit totalTimeFunctionUnit) {
-    return new JfrFunctionTimer<>(id, obj, countFunction, totalTimeFunction, totalTimeFunctionUnit, this.getBaseTimeUnit());
+    JfrFunctionTimer<T> functionTimer = new JfrFunctionTimer<>(id, obj, countFunction, totalTimeFunction, totalTimeFunctionUnit, this.getBaseTimeUnit());
+    functionTimer.recordEvent(); // record the initial value
+    return functionTimer;
   }
 
   @Override

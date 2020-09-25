@@ -9,11 +9,12 @@ final class JfrFunctionTimerEvent extends AbstractJfrMeterEvent {
     super(id, event);
   }
 
-  void setDuration(long duration) {
+  void setTotalTimeAndCount(double totalTime, double count) {
     int attributeIndex = 0;
 
     attributeIndex = this.setCommonEventAttributes(attributeIndex);
-    event.set(attributeIndex++, duration);
+    event.set(attributeIndex++, totalTime);
+    event.set(attributeIndex++, count);
   }
 
 }

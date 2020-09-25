@@ -17,10 +17,10 @@ final class FunctionCounterEventFactory extends AbstractMeterEventFactory<JfrFun
 
   @Override
   protected List<ValueDescriptor> getAdditionalValueDescriptors() {
-    List<AnnotationElement> incrementAnnotations = List.of(
+    List<AnnotationElement> countAnnotations = List.of(
         new AnnotationElement(Label.class, "Count"),
         new AnnotationElement(Description.class, "The cumulative count since this counter was created."));
-    ValueDescriptor incrementDescriptor = new ValueDescriptor(double.class, "count", incrementAnnotations);
+    ValueDescriptor incrementDescriptor = new ValueDescriptor(double.class, "count", countAnnotations);
 
     return List.of(incrementDescriptor);
   }
