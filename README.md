@@ -9,6 +9,7 @@ Usage
 ```java
 Metrics.addRegistry(new JfrMeterRegistry());
 ```
+
 ```xml
 <dependency>
   <groupId>com.github.marschall</groupId>
@@ -27,7 +28,14 @@ Features
 - Generates a JFR event for every metered value.
 
 
-Issues
-------
+Configuration
+-------------
 
-- Meters that should be polled currently aren't, eg. the count of `FunctionCounter` is currently not reported.
+The frequency of polled meters like `FunctionCounter` have to be configured in a `.jfc` file.
+
+```xml
+<event name="my.fcounter">
+  <setting name="enabled">true</setting>
+  <setting name="period">5 s</setting>
+</event>
+```
