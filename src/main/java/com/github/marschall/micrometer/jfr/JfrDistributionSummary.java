@@ -24,12 +24,13 @@ final class JfrDistributionSummary extends AbstractJfrMeter<DistributionSummaryE
 
   @Override
   public void record(double amount) {
-    double value = amount * this.scale;
-    this.statistics.record(value);
-
-    JfrDistributionSummaryEvent event = this.newEmptyEvent();
-    event.setAmount(value);
-    event.commit();
+    if (amount >= 0.0d) {
+      double value = amount * this.scale;
+      this.statistics.record(value);
+      JfrDistributionSummaryEvent event = this.newEmptyEvent();
+      event.setAmount(value);
+      event.commit();
+    }
   }
 
   @Override
