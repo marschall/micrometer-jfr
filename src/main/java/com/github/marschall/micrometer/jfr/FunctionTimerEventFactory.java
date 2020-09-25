@@ -19,19 +19,18 @@ final class FunctionTimerEventFactory extends AbstractMeterEventFactory<JfrFunct
 
   @Override
   protected List<ValueDescriptor> getAdditionalValueDescriptors() {
-    List<AnnotationElement> durationAnnotations = List.of(
+    List<AnnotationElement> totalTimeAnnotations = List.of(
         new AnnotationElement(Label.class, "Total Time"),
         new AnnotationElement(Description.class, "The total time of all occurrences of the timed event metered in " + this.baseTimeUnit),
         new AnnotationElement(Timespan.class, this.getTimespanOfBaseTimeUnit()));
-    // "duration" causes an error
-    ValueDescriptor durationDescriptor = new ValueDescriptor(long.class, "totalTime", durationAnnotations);
+    ValueDescriptor totalTimeDescriptor = new ValueDescriptor(long.class, "totalTime", totalTimeAnnotations);
 
     List<AnnotationElement> countAnnotations = List.of(
         new AnnotationElement(Label.class, "Count"),
         new AnnotationElement(Description.class, "The total number of occurrences of the timed event."));
     ValueDescriptor countDescriptor = new ValueDescriptor(double.class, "count", countAnnotations);
 
-    return List.of(durationDescriptor, countDescriptor);
+    return List.of(totalTimeDescriptor, countDescriptor);
   }
 
   @Override

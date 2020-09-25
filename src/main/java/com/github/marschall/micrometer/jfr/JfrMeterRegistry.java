@@ -79,7 +79,7 @@ public final class JfrMeterRegistry extends MeterRegistry {
 
   @Override
   protected Meter newMeter(Id id, Type type, Iterable<Measurement> measurements) {
-    return new JfrMeter(id, type, measurements);
+    return new JfrMeter(id, type, measurements, this.getBaseTimeUnit());
   }
 
   @Override

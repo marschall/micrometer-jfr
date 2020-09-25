@@ -1,5 +1,7 @@
 package com.github.marschall.micrometer.jfr;
 
+import java.util.concurrent.TimeUnit;
+
 import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.Meter;
 
@@ -7,20 +9,30 @@ final class JfrMeter extends AbstractJfrMeter<MeterEventFactory, JfrMeterEvent> 
 
   private final Type type;
   private final Iterable<Measurement> measurements;
+  private final Runnable hook;
 
-  public JfrMeter(Id id, Type type, Iterable<Measurement> measurements) {
-    super(id, new MeterEventFactory(id));
+  JfrMeter(Id id, Type type, Iterable<Measurement> measurements, TimeUnit baseTimeUnit) {
+    super(id, new MeterEventFactory(id, baseTimeUnit, measurements));
     this.type = type;
     this.measurements = measurements;
+    this.hook = () -> this.recordEvent();
+    this.meterEventFactory.registerPeriodicEvent(this.jfrEventFactory, this.hook);
+  }
+
+  @Override
+  public void close() {
+    this.meterEventFactory.unregisterPeriodicEvent(this.hook);
+    super.close();
+  }
+
+  private void recordEvent() {
+    JfrMeterEvent event = this.newEmptyEvent();
+    event.recordValues(this.type, this.measurements);
+    event.commit();
   }
 
   @Override
   public Iterable<Measurement> measure() {
-    JfrMeterEvent event = this.newEmptyEvent();
-    // TODO handle measurements
-    // TODO record type?
-    // who the type different from the type of the id?
-    event.commit();
     return this.measurements;
   }
 
