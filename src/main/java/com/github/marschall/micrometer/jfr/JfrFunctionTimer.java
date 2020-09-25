@@ -7,9 +7,6 @@ import java.util.function.ToLongFunction;
 
 import io.micrometer.core.instrument.FunctionTimer;
 import io.micrometer.core.instrument.util.TimeUtils;
-import jdk.jfr.Event;
-import jdk.jfr.EventFactory;
-import jdk.jfr.FlightRecorder;
 
 final class JfrFunctionTimer<T> extends AbstractJfrMeter<FunctionTimerEventFactory, JfrFunctionTimerEvent> implements FunctionTimer {
 
@@ -32,18 +29,12 @@ final class JfrFunctionTimer<T> extends AbstractJfrMeter<FunctionTimerEventFacto
     this.totalTimeFunctionUnit = totalTimeFunctionUnit;
     this.baseTimeUnit = baseTimeUnit;
     this.hook = () -> this.recordEvent();
-  }
-
-  @Override
-  protected void registerPriodicEvent(EventFactory eventFactory) {
-    Event event = eventFactory.newEvent();
-    Class<? extends Event> eventClass = event.getClass();
-    FlightRecorder.addPeriodicEvent(eventClass, this.hook);
+    this.meterEventFactory.registerPeriodicEvent(this.jfrEventFactory, this.hook);
   }
 
   @Override
   public void close() {
-    FlightRecorder.removePeriodicEvent(this.hook);
+    this.meterEventFactory.unregisterPeriodicEvent(this.hook);
     super.close();
   }
   

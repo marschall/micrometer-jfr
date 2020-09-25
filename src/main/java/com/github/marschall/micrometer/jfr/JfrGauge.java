@@ -4,9 +4,6 @@ import java.lang.ref.WeakReference;
 import java.util.function.ToDoubleFunction;
 
 import io.micrometer.core.instrument.Gauge;
-import jdk.jfr.Event;
-import jdk.jfr.EventFactory;
-import jdk.jfr.FlightRecorder;
 
 final class JfrGauge<T> extends AbstractJfrMeter<GaugeEventFactory, JfrGaugeEvent> implements Gauge {
 
@@ -20,18 +17,12 @@ final class JfrGauge<T> extends AbstractJfrMeter<GaugeEventFactory, JfrGaugeEven
     this.reference = new WeakReference<>(obj);
     this.valueFunction = valueFunction;
     this.hook = () -> this.value();
-  }
-
-  @Override
-  protected void registerPriodicEvent(EventFactory eventFactory) {
-    Event event = eventFactory.newEvent();
-    Class<? extends Event> eventClass = event.getClass();
-    FlightRecorder.addPeriodicEvent(eventClass, this.hook);
+    this.meterEventFactory.registerPeriodicEvent(this.jfrEventFactory, this.hook);
   }
 
   @Override
   public void close() {
-    FlightRecorder.removePeriodicEvent(this.hook);
+    this.meterEventFactory.unregisterPeriodicEvent(this.hook);
     super.close();
   }
 

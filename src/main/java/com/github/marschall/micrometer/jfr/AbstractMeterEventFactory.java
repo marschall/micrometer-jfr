@@ -13,7 +13,9 @@ import jdk.jfr.AnnotationElement;
 import jdk.jfr.Category;
 import jdk.jfr.DataAmount;
 import jdk.jfr.Description;
+import jdk.jfr.Event;
 import jdk.jfr.EventFactory;
+import jdk.jfr.FlightRecorder;
 import jdk.jfr.Label;
 import jdk.jfr.Name;
 import jdk.jfr.Percentage;
@@ -61,6 +63,20 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
     List<AnnotationElement> eventAnnotations = this.getEventAnnotations();
 
     return EventFactory.create(eventAnnotations, fields);
+  }
+
+  void registerPeriodicEvent(EventFactory eventFactory, Runnable hook) {
+    Event event = eventFactory.newEvent();
+    Class<? extends Event> eventClass = event.getClass();
+    FlightRecorder.addPeriodicEvent(eventClass, hook);
+  }
+
+  void unregisterPeriodicEvent(Runnable hook) {
+    FlightRecorder.removePeriodicEvent(hook);
+  }
+
+  void closeEventFactory(EventFactory eventFactory) {
+    eventFactory.unregister();
   }
 
   private ValueDescriptor getTypeValueDescriptor() {
