@@ -1,0 +1,12 @@
+# Use docker-based build environment (instead of openvz)
+sudo: false
+
+language: java
+
+jdk:
+  - openjdk11
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+
