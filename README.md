@@ -18,6 +18,8 @@ Metrics.addRegistry(new JfrMeterRegistry());
 </dependency>
 ```
 
+![Image of Spring Batch Micrometer JFR events](https://github.com/marschall/micrometer-jfr/raw/master/src/main/javadoc/screenshot.png)
+
 Features
 --------
 
