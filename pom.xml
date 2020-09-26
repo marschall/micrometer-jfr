@@ -4,7 +4,7 @@
 
   <groupId>com.github.marschall</groupId>
   <artifactId>micrometer-jfr</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.2.0</version>
   <inceptionYear>2020</inceptionYear>
   <url>https://github.com/marschall/micrometer-jfr</url>
   <name>Micrometer JFR</name>
@@ -35,7 +35,7 @@
     <connection>scm:git:git@github.com:marschall/micrometer-jfr.git</connection>
     <developerConnection>scm:git:git@github.com:marschall/micrometer-jfr.git</developerConnection>
     <url>${project.url}</url>
-    <tag>HEAD</tag>
+    <tag>0.2.0</tag>
   </scm>
 
   <build>
