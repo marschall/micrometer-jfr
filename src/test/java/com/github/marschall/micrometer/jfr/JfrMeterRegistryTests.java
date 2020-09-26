@@ -1,8 +1,10 @@
 package com.github.marschall.micrometer.jfr;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.ToDoubleFunction;
@@ -38,7 +40,8 @@ class JfrMeterRegistryTests {
   }
 
   @AfterAll
-  static void removeRegistry() {
+  static void removeRegistry() throws InterruptedException {
+    Thread.sleep(500L);
     Metrics.removeRegistry(jfrRegistry);
   }
 
@@ -76,8 +79,13 @@ class JfrMeterRegistryTests {
 
   @Test
   void createMeter() {
-    Meter meter = createMeter("jobStats", "Job Statistics", Type.GAUGE, List.of(new Measurement(() -> 1.0d, Statistic.VALUE)),
-        Tag.of("name", "cleanup"), Tag.of("status", "ok"));
+    //@formatter:off
+    List<Measurement> measurements = Arrays.stream(Statistic.values())
+                                           .map(statistic -> new Measurement(() -> 1.0d, statistic))
+                                           .collect(toList());
+    //@formatter:on
+    Meter meter = createMeter("jobStats", "Job Statistics", Type.GAUGE, measurements,
+            Tag.of("name", "cleanup"), Tag.of("status", "ok"));
 
     meter.measure();
   }
@@ -110,7 +118,6 @@ class JfrMeterRegistryTests {
     progress.set(20);
     functionCounter.count();
     progress.set(40);
-    functionCounter.count();
   }
 
   @Test

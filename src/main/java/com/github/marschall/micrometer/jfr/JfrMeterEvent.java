@@ -16,7 +16,9 @@ final class JfrMeterEvent extends AbstractJfrMeterEvent {
 
     attributeIndex = this.setCommonEventAttributes(attributeIndex);
 
-    this.event.set(attributeIndex++, type.name());
+    // use the type from the id
+    // this.event.set(attributeIndex++, type.name());
+
     for (Measurement measurement : measurements) {
       double value = measurement.getValue();
       this.event.set(attributeIndex++, value);

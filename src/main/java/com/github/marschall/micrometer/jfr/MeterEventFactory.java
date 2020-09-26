@@ -26,12 +26,13 @@ final class MeterEventFactory extends AbstractMeterEventFactory<JfrMeterEvent> {
   @Override
   protected List<ValueDescriptor> getAdditionalValueDescriptors() {
     List<ValueDescriptor> valueDescriptors = new ArrayList<>();
-    
-    List<AnnotationElement> typeAnnotations = List.of(
-      new AnnotationElement(Label.class, "Type"),
-      new AnnotationElement(Description.class, "What kind of meter this is."));
-    ValueDescriptor typeDescriptor = new ValueDescriptor(String.class, "type", typeAnnotations);
-    valueDescriptors.add(typeDescriptor);
+
+    // use the type from the id
+    // List<AnnotationElement> typeAnnotations = List.of(
+    //   new AnnotationElement(Label.class, "Type"),
+    //   new AnnotationElement(Description.class, "What kind of meter this is."));
+    // ValueDescriptor typeDescriptor = new ValueDescriptor(String.class, "type", typeAnnotations);
+    // valueDescriptors.add(typeDescriptor);
 
     for (Measurement measurement : this.measurements) {
       Statistic statistic = measurement.getStatistic();
@@ -39,20 +40,22 @@ final class MeterEventFactory extends AbstractMeterEventFactory<JfrMeterEvent> {
       switch (statistic) {
         case TOTAL_TIME:
           List<AnnotationElement> totalTimeAnnotations = List.of(
-              new AnnotationElement(Label.class, "Total Time"),
-              new AnnotationElement(Description.class, "The total time of all occurrences of the timed event metered in " + this.baseTimeUnit),
-              new AnnotationElement(Timespan.class, this.getTimespanOfBaseTimeUnit()));
+                  new AnnotationElement(Label.class, "Total Time"),
+                  new AnnotationElement(Description.class, "The total time of all occurrences of the timed event metered in " + this.baseTimeUnit),
+                  new AnnotationElement(Timespan.class, this.getTimespanOfBaseTimeUnit()));
           statisticDescriptor = new ValueDescriptor(double.class, "totalTime", totalTimeAnnotations);
+          break;
         case DURATION:
           List<AnnotationElement> durationAnnotations = List.of(
-              new AnnotationElement(Label.class, "Metered Duration"),
-              new AnnotationElement(Description.class, "Duration in " + this.baseTimeUnit),
-              new AnnotationElement(Timespan.class, this.getTimespanOfBaseTimeUnit()));
+                  new AnnotationElement(Label.class, "Metered Duration"),
+                  new AnnotationElement(Description.class, "Duration in " + this.baseTimeUnit),
+                  new AnnotationElement(Timespan.class, this.getTimespanOfBaseTimeUnit()));
           // "duration" causes an error
           statisticDescriptor = new ValueDescriptor(double.class, "meteredDuration", durationAnnotations);
+          break;
         default:
           List<AnnotationElement> statisticAnnotations = List.of(
-              new AnnotationElement(Label.class, statistic.getTagValueRepresentation()));
+                  new AnnotationElement(Label.class, statistic.getTagValueRepresentation()));
           statisticDescriptor = new ValueDescriptor(double.class, statistic.getTagValueRepresentation(), statisticAnnotations);
       }
       valueDescriptors.add(statisticDescriptor);
@@ -60,7 +63,7 @@ final class MeterEventFactory extends AbstractMeterEventFactory<JfrMeterEvent> {
 
     return valueDescriptors;
   }
-  
+
   @Override
   JfrMeterEvent newEmptyEvent(EventFactory eventFactory) {
     return new JfrMeterEvent(this.id, eventFactory.newEvent());
