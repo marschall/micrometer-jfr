@@ -81,7 +81,7 @@ final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory,
       this.event.end();
 
       long end = JfrLongTaskTimer.this.clock.monotonicTime();
-      this.duration = end - start;
+      this.duration = end - this.start;
       this.event.setDuration(this.duration);
       this.event.commit();
 
@@ -91,7 +91,7 @@ final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory,
 
     @Override
     public double duration(TimeUnit unit) {
-      return TimeUtils.convert(duration, JfrLongTaskTimer.this.baseTimeUnit, unit);
+      return TimeUtils.convert(this.duration, JfrLongTaskTimer.this.baseTimeUnit, unit);
     }
 
   }

@@ -127,16 +127,16 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
 
   static String mapTimeUnitToTimespan(TimeUnit timeUnit) {
     switch (timeUnit) {
-    case NANOSECONDS:
-      return Timespan.NANOSECONDS;
-    case MICROSECONDS:
-      return Timespan.MICROSECONDS;
-    case MILLISECONDS:
-      return Timespan.MILLISECONDS;
-    case SECONDS:
-      return Timespan.SECONDS;
-    default:
-      throw new IllegalArgumentException("unsupporte time unit");
+      case NANOSECONDS:
+        return Timespan.NANOSECONDS;
+      case MICROSECONDS:
+        return Timespan.MICROSECONDS;
+      case MILLISECONDS:
+        return Timespan.MILLISECONDS;
+      case SECONDS:
+        return Timespan.SECONDS;
+      default:
+        throw new IllegalArgumentException("unsupporte time unit");
     }
   }
 
@@ -145,14 +145,14 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
       return Optional.empty();
     }
     switch (baseUnit) {
-    case BaseUnits.BYTES:
-      return Optional.of(new AnnotationElement(DataAmount.class, DataAmount.BYTES));
-    case BaseUnits.MILLISECONDS:
-      return Optional.of(new AnnotationElement(Timespan.class, Timespan.MILLISECONDS));
-    case BaseUnits.PERCENT:
-      return Optional.of(new AnnotationElement(Percentage.class));
-    default:
-      return Optional.empty();
+      case BaseUnits.BYTES:
+        return Optional.of(new AnnotationElement(DataAmount.class, DataAmount.BYTES));
+      case BaseUnits.MILLISECONDS:
+        return Optional.of(new AnnotationElement(Timespan.class, Timespan.MILLISECONDS));
+      case BaseUnits.PERCENT:
+        return Optional.of(new AnnotationElement(Percentage.class));
+      default:
+        return Optional.empty();
     }
   }
 
