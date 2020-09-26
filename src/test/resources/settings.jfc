@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration version="2.0" label="Micrometer JFR" description="Minimal configuration that records only Micrometer meters and JUnit tests." provider="micrometer-jfr">
+
+  <event name="marschall.jfr.counter">
+    <setting name="enabled">true</setting>
+  </event>
+
+  <event name="marschall.jfr.distributionSummary">
+    <setting name="enabled">true</setting>
+  </event>
+
+  <event name="marschall.jfr.functionCounter">
+    <setting name="enabled">true</setting>
+    <setting name="period">10 ms</setting>
+  </event>
+
+  <event name="marschall.jfr.functionTimer">
+    <setting name="enabled">true</setting>
+    <setting name="period">10 ms</setting>
+  </event>
+
+  <event name="marschall.jfr.gauge">
+    <setting name="enabled">true</setting>
+    <setting name="period">10 ms</setting>
+  </event>
+
+  <event name="marschall.jfr.longTaskTimer">
+    <setting name="enabled">true</setting>
+  </event>
+
+  <event name="marschall.jfr.meter">
+    <setting name="enabled">true</setting>
+    <setting name="period">10 ms</setting>
+  </event>
+
+  <event name="marschall.jfr.timer">
+    <setting name="enabled">true</setting>
+  </event>
+
+  <event name="marschall.jfr.timer.sample">
+    <setting name="enabled">true</setting>
+  </event>
+
+  <event name="org.junit.TestExecution">
+    <setting name="enabled">true</setting>
+  </event>
+
+  <event name="org.junit.TestPlan">
+    <setting name="enabled">true</setting>
+  </event>
+
+</configuration>

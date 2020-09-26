@@ -37,13 +37,14 @@ final class JfrFunctionTimer<T> extends AbstractJfrMeter<FunctionTimerEventFacto
     this.meterEventFactory.unregisterPeriodicEvent(this.hook);
     super.close();
   }
-  
+
   void recordEvent() {
     double totalTime = this.totalTime(this.baseTimeUnit());
     double count = this.count();
-    
+
     JfrFunctionTimerEvent event = this.newEmptyEvent();
     event.setTotalTimeAndCount(totalTime, count);
+    event.commit();
   }
 
   @Override
