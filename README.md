@@ -14,7 +14,7 @@ Metrics.addRegistry(new JfrMeterRegistry());
 <dependency>
   <groupId>com.github.marschall</groupId>
   <artifactId>micrometer-jfr</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 </dependency>
 ```
 
@@ -28,6 +28,12 @@ Features
 - Maps `Id#getName()` and `Id#getDescription()` to `@Name` and `@Description`.
 - Stacktraces are disabled for all events for reduced overhead.
 - Generates a JFR event for every metered value.
+- A custom naming convention us used to translate tag names to capitalized words.
+
+Limitations
+-----------
+
+- The built in duration of most events is 0 instead a new attribute "Metered Duration" is added.
 
 
 Configuration

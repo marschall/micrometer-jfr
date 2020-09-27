@@ -18,12 +18,17 @@ class AbstractMeterEventFactoryTests {
     assertEquals(Timespan.MILLISECONDS, AbstractMeterEventFactory.mapTimeUnitToTimespan(TimeUnit.MILLISECONDS));
     assertEquals(Timespan.SECONDS, AbstractMeterEventFactory.mapTimeUnitToTimespan(TimeUnit.SECONDS));
   }
-  
+
   @Test
   void unsupporteTimeUnits() {
     assertThrows(IllegalArgumentException.class, () -> AbstractMeterEventFactory.mapTimeUnitToTimespan(TimeUnit.MINUTES));
     assertThrows(IllegalArgumentException.class, () -> AbstractMeterEventFactory.mapTimeUnitToTimespan(TimeUnit.HOURS));
     assertThrows(IllegalArgumentException.class, () -> AbstractMeterEventFactory.mapTimeUnitToTimespan(TimeUnit.DAYS));
+  }
+
+  @Test
+  void tagKeys() {
+    assertEquals("Job Name", AbstractMeterEventFactory.CAPITALIZED_WORDS.tagKey("job.name"));
   }
 
 }
