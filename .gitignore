@@ -1,3 +1,5 @@
 target/
 *.jfr
+pom.xml.releaseBackup
+release.properties
 
