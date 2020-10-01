@@ -29,6 +29,7 @@ class AbstractMeterEventFactoryTests {
   @Test
   void tagKeys() {
     assertEquals("Job Name", AbstractMeterEventFactory.CAPITALIZED_WORDS.tagKey("job.name"));
+    assertEquals("Status", AbstractMeterEventFactory.CAPITALIZED_WORDS.tagKey("status"));
   }
 
 }

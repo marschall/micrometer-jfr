@@ -143,6 +143,7 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
     String[] category = { "Micrometer" };
     List<AnnotationElement> eventAnnotations = new ArrayList<>();
     eventAnnotations.add(new AnnotationElement(Name.class, this.id.getName()));
+    eventAnnotations.add(new AnnotationElement(Label.class, CAPITALIZED_WORDS.tagKey(this.id.getName())));
     eventAnnotations.add(new AnnotationElement(Description.class, this.id.getDescription()));
     eventAnnotations.add(new AnnotationElement(Category.class, category));
     eventAnnotations.add(new AnnotationElement(StackTrace.class, false));
