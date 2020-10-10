@@ -89,7 +89,7 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-XX:StartFlightRecording:maxsize=1m,filename=${project.build.directory}/recording.jfr,settings=${project.basedir}/src/test/resources/settings.jfc</argLine>
+          <forkCount>0</forkCount>
         </configuration>
       </plugin>
       <plugin>

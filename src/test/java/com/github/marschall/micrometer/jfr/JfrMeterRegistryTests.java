@@ -1,11 +1,16 @@
 package com.github.marschall.micrometer.jfr;
 
 import static java.util.stream.Collectors.toList;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.ToDoubleFunction;
@@ -13,7 +18,9 @@ import java.util.function.ToLongFunction;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.DistributionSummary;
@@ -29,24 +36,77 @@ import io.micrometer.core.instrument.Statistic;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.binder.BaseUnits;
+import jdk.jfr.EventType;
+import jdk.jfr.Recording;
+import jdk.jfr.consumer.RecordedEvent;
+import jdk.jfr.consumer.RecordingFile;
 
+@TestMethodOrder(OrderAnnotation.class)
 class JfrMeterRegistryTests {
 
   private static final String METRICS_PREFIX = "marschall.jfr.";
 
-  private static JfrMeterRegistry jfrRegistry;
+  private static volatile JfrMeterRegistry jfrRegistry;
+
+  private static volatile Recording recording;
+
+  static final Path RECORDING_LOCATION = Path.of("target", JfrMeterRegistryTests.class.getSimpleName() + ".jfr");
 
   @BeforeAll
-  static void addRegistry() {
+  static void beforeAll() throws IOException {
+    startRecording();
+    addRegistry();
+  }
+
+  private static void startRecording() throws IOException {
+    recording = new Recording();
+    recording.enable("marschall.jfr.counter");
+    recording.enable("marschall.jfr.distributionSummary");
+    recording.enable("marschall.jfr.functionCounter").withPeriod(Duration.ofMillis(10L));
+    recording.enable("marschall.jfr.functionTimer").withPeriod(Duration.ofMillis(10L));
+    recording.enable("marschall.jfr.gauge").withPeriod(Duration.ofMillis(10L));
+    recording.enable("marschall.jfr.longTaskTimer");
+    recording.enable("marschall.jfr.meter").withPeriod(Duration.ofMillis(10L));
+    recording.enable("marschall.jfr.timer");
+    recording.enable("marschall.jfr.timer.sample");
+    recording.enable("org.junit.TestExecution");
+    recording.enable("org.junit.TestPlan");
+    recording.setMaxSize(1L * 1024L * 1024L);
+    recording.setToDisk(true);
+    recording.setDestination(RECORDING_LOCATION);
+    recording.start();
+  }
+
+  private static void addRegistry() {
     jfrRegistry = new JfrMeterRegistry();
     Metrics.addRegistry(jfrRegistry);
   }
 
+
+
   @AfterAll
-  static void removeRegistry() throws InterruptedException {
+  static void afterAll() throws InterruptedException, IOException {
+    removeRegistry();
+    stopRecording();
+  }
+
+  private static void removeRegistry() throws InterruptedException, IOException {
     Thread.sleep(500L);
     Metrics.removeRegistry(jfrRegistry);
     jfrRegistry.close();
+  }
+
+  private static void stopRecording() throws IOException {
+    recording.close();
+    Set<String> eventNames = new HashSet<>();
+    try (RecordingFile recordingFile = new RecordingFile(RECORDING_LOCATION)) {
+      while (recordingFile.hasMoreEvents()) {
+        RecordedEvent event = recordingFile.readEvent();
+        EventType eventType = event.getEventType();
+        eventNames.add(eventType.getName());
+      }
+    }
+    assertFalse(eventNames.isEmpty());
   }
 
   @Test
