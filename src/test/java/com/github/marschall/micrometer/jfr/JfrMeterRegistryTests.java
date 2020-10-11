@@ -82,8 +82,6 @@ class JfrMeterRegistryTests {
     Metrics.addRegistry(jfrRegistry);
   }
 
-
-
   @AfterAll
   static void afterAll() throws InterruptedException, IOException {
     removeRegistry();
@@ -107,6 +105,15 @@ class JfrMeterRegistryTests {
       }
     }
     assertFalse(eventNames.isEmpty());
+    assertTrue(eventNames.contains("marschall.jfr.counter"));
+    assertTrue(eventNames.contains("marschall.jfr.distributionSummary"));
+    assertTrue(eventNames.contains("marschall.jfr.functionCounter"));
+    assertTrue(eventNames.contains("marschall.jfr.functionTimer"));
+    assertTrue(eventNames.contains("marschall.jfr.gauge"));
+    assertTrue(eventNames.contains("marschall.jfr.longTaskTimer"));
+    assertTrue(eventNames.contains("marschall.jfr.meter"));
+    assertTrue(eventNames.contains("marschall.jfr.timer"));
+    assertTrue(eventNames.contains("marschall.jfr.timer.sample"));
   }
 
   @Test
