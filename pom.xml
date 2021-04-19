@@ -62,6 +62,7 @@
         <configuration>
           <links>
             <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
+            <link>https://javadoc.io/doc/io.micrometer/micrometer-core/latest/</link>
           </links>
           <source>11</source>
         </configuration>
