@@ -228,12 +228,14 @@ class JfrMeterRegistryTests {
 
     }
     CountAndTime countAndTime = new CountAndTime();
-    createFunctionTimer("functionTimer", "Function Timer",
+    FunctionTimer functionTimer = createFunctionTimer("functionTimer", "Function Timer",
             countAndTime, CountAndTime::getCount, CountAndTime::getTotalTime, TimeUnit.MINUTES,
             Tag.of("name", "cleanup"), Tag.of("status", "ok"));
 
     countAndTime.count = 1234L;
     countAndTime.totalTime = 1234.0d;
+
+    functionTimer.mean(TimeUnit.MILLISECONDS);
   }
 
   @Test

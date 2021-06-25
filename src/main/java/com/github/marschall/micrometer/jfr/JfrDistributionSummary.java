@@ -1,6 +1,16 @@
 package com.github.marschall.micrometer.jfr;
 
+import java.util.function.Function;
+
+import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.DistributionSummary;
+import io.micrometer.core.instrument.FunctionCounter;
+import io.micrometer.core.instrument.FunctionTimer;
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.LongTaskTimer;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.TimeGauge;
+import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 
@@ -46,6 +56,14 @@ final class JfrDistributionSummary extends AbstractJfrMeter<DistributionSummaryE
   @Override
   public double max() {
     return this.statistics.max();
+  }
+
+  @Override
+  public <T> T match(Function<Gauge, T> visitGauge, Function<Counter, T> visitCounter, Function<Timer, T> visitTimer,
+      Function<DistributionSummary, T> visitSummary, Function<LongTaskTimer, T> visitLongTaskTimer,
+      Function<TimeGauge, T> visitTimeGauge, Function<FunctionCounter, T> visitFunctionCounter,
+      Function<FunctionTimer, T> visitFunctionTimer, Function<Meter, T> visitMeter) {
+    return visitSummary.apply(this);
   }
 
 }
