@@ -164,7 +164,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.7.1</version>
+        <version>5.7.2</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -175,7 +175,7 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-core</artifactId>
-      <version>1.6.6</version>
+      <version>1.7.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
