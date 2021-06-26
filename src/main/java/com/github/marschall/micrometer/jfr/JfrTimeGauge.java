@@ -1,5 +1,6 @@
 package com.github.marschall.micrometer.jfr;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 
@@ -13,10 +14,18 @@ import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.TimeGauge;
 import io.micrometer.core.instrument.Timer;
 
-final class JfrGauge<T> extends AbstractJfrGauge<T, GaugeEventFactory, JfrGaugeEvent> {
+final class JfrTimeGauge<T> extends AbstractJfrGauge<T, TimerGaugeEventFactory, JfrTimerGaugeEvent> implements TimeGauge {
 
-  JfrGauge(Id id, T obj, ToDoubleFunction<T> valueFunction) {
-    super(id, obj, valueFunction, new GaugeEventFactory(id));
+  private final TimeUnit valueFunctionUnit;
+
+  JfrTimeGauge(Id id, T obj, TimeUnit valueFunctionUnit, ToDoubleFunction<T> valueFunction) {
+    super(id, obj, valueFunction, new TimerGaugeEventFactory(id, valueFunctionUnit));
+    this.valueFunctionUnit = valueFunctionUnit;
+  }
+
+  @Override
+  public TimeUnit baseTimeUnit() {
+    return this.valueFunctionUnit;
   }
 
   @Override
@@ -24,7 +33,7 @@ final class JfrGauge<T> extends AbstractJfrGauge<T, GaugeEventFactory, JfrGaugeE
           Function<DistributionSummary, X> visitSummary, Function<LongTaskTimer, X> visitLongTaskTimer,
           Function<TimeGauge, X> visitTimeGauge, Function<FunctionCounter, X> visitFunctionCounter,
           Function<FunctionTimer, X> visitFunctionTimer, Function<Meter, X> visitMeter) {
-    return visitGauge.apply(this);
+    return visitTimeGauge.apply(this);
   }
 
 }

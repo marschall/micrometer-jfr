@@ -3,13 +3,14 @@ package com.github.marschall.micrometer.jfr;
 import io.micrometer.core.instrument.Meter.Id;
 import jdk.jfr.Event;
 
-final class JfrTimerEvent extends AbstractJfrMeterEvent {
+final class JfrTimerGaugeEvent extends AbstractJfrMeterEvent implements DoubleValueEvent {
 
-  JfrTimerEvent(Id id, Event event) {
+  JfrTimerGaugeEvent(Id id, Event event) {
     super(id, event);
   }
 
-  void setDuration(long duration) {
+  @Override
+  public void setValue(double duration) {
     int attributeIndex = 0;
 
     attributeIndex = this.setCommonEventAttributes(attributeIndex);

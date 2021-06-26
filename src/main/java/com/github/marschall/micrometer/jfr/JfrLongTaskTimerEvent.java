@@ -11,6 +11,7 @@ final class JfrLongTaskTimerEvent extends AbstractJfrMeterEvent {
 
   void setDuration(long duration) {
     int attributeIndex = 0;
+
     attributeIndex = this.setCommonEventAttributes(attributeIndex);
     event.set(attributeIndex++, duration);
   }

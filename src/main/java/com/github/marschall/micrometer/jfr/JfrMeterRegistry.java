@@ -17,6 +17,7 @@ import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.Meter.Id;
 import io.micrometer.core.instrument.Meter.Type;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.TimeGauge;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.pause.PauseDetector;
@@ -47,6 +48,13 @@ public final class JfrMeterRegistry extends MeterRegistry {
   @Override
   protected <T> Gauge newGauge(Id id, @Nullable T obj, ToDoubleFunction<T> valueFunction) {
     Gauge gauge = new JfrGauge<>(id, obj, valueFunction);
+    gauge.value(); // record the initial value
+    return gauge;
+  }
+
+  @Override
+  protected <T> TimeGauge newTimeGauge(Id id, T obj, TimeUnit valueFunctionUnit, ToDoubleFunction<T> valueFunction) {
+    TimeGauge gauge = new JfrTimeGauge<>(id, obj, valueFunctionUnit, valueFunction);
     gauge.value(); // record the initial value
     return gauge;
   }
