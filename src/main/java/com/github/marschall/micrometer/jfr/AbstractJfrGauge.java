@@ -35,7 +35,6 @@ abstract class AbstractJfrGauge<T, F extends AbstractMeterEventFactory<E>, E ext
     return value;
   }
 
-
   @Override
   public void close() {
     this.meterEventFactory.unregisterPeriodicEvent(this.hook);
