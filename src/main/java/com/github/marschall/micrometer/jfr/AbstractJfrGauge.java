@@ -5,7 +5,7 @@ import java.util.function.ToDoubleFunction;
 
 import io.micrometer.core.instrument.Gauge;
 
-abstract class AbstractJfrGauge<T, F extends AbstractMeterEventFactory<E>, E extends AbstractJfrMeterEvent & DoubleValueEvent> extends AbstractJfrMeter<F, E>  implements Gauge {
+abstract class AbstractJfrGauge<T, F extends AbstractMeterEventFactory<E>, E extends AbstractJfrMeterEvent & DoubleValueEvent> extends AbstractJfrMeter<F, E> implements Gauge {
 
   final WeakReference<T> reference;
   final ToDoubleFunction<T> valueFunction;

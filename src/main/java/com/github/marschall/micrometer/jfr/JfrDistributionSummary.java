@@ -1,5 +1,6 @@
 package com.github.marschall.micrometer.jfr;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import io.micrometer.core.instrument.Counter;
@@ -64,6 +65,14 @@ final class JfrDistributionSummary extends AbstractJfrMeter<DistributionSummaryE
       Function<TimeGauge, T> visitTimeGauge, Function<FunctionCounter, T> visitFunctionCounter,
       Function<FunctionTimer, T> visitFunctionTimer, Function<Meter, T> visitMeter) {
     return visitSummary.apply(this);
+  }
+
+  @Override
+  public void use(Consumer<Gauge> visitGauge, Consumer<Counter> visitCounter, Consumer<Timer> visitTimer,
+      Consumer<DistributionSummary> visitSummary, Consumer<LongTaskTimer> visitLongTaskTimer,
+      Consumer<TimeGauge> visitTimeGauge, Consumer<FunctionCounter> visitFunctionCounter,
+      Consumer<FunctionTimer> visitFunctionTimer, Consumer<Meter> visitMeter) {
+    visitSummary.accept(this);
   }
 
 }

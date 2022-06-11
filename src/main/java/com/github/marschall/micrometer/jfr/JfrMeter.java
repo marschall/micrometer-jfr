@@ -1,6 +1,7 @@
 package com.github.marschall.micrometer.jfr;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import io.micrometer.core.instrument.Counter;
@@ -44,13 +45,21 @@ final class JfrMeter extends AbstractJfrMeter<MeterEventFactory, JfrMeterEvent> 
   public Iterable<Measurement> measure() {
     return this.measurements;
   }
-  
+
   @Override
   public <T> T match(Function<Gauge, T> visitGauge, Function<Counter, T> visitCounter, Function<Timer, T> visitTimer,
       Function<DistributionSummary, T> visitSummary, Function<LongTaskTimer, T> visitLongTaskTimer,
       Function<TimeGauge, T> visitTimeGauge, Function<FunctionCounter, T> visitFunctionCounter,
       Function<FunctionTimer, T> visitFunctionTimer, Function<Meter, T> visitMeter) {
     return visitMeter.apply(this);
+  }
+
+  @Override
+  public void use(Consumer<Gauge> visitGauge, Consumer<Counter> visitCounter, Consumer<Timer> visitTimer,
+      Consumer<DistributionSummary> visitSummary, Consumer<LongTaskTimer> visitLongTaskTimer,
+      Consumer<TimeGauge> visitTimeGauge, Consumer<FunctionCounter> visitFunctionCounter,
+      Consumer<FunctionTimer> visitFunctionTimer, Consumer<Meter> visitMeter) {
+    visitMeter.accept(this);
   }
 
 }
