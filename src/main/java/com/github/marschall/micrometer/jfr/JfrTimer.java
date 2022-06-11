@@ -1,5 +1,6 @@
 package com.github.marschall.micrometer.jfr;
 
+import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -44,13 +45,24 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
 
   @Override
   public void record(long amount, TimeUnit unit) {
-    long duration = this.baseTimeUnit().convert(amount, unit);
+    long units = this.baseTimeUnit().convert(amount, unit);
 
     JfrTimerEvent event = this.newEmptyEvent();
-    event.setDuration(duration);
+    event.setDuration(units);
     event.commit();
 
-    this.statistics.record(duration);
+    this.statistics.record(units);
+  }
+
+  @Override
+  public void record(Duration duration) {
+    long units = this.baseTimeUnit().convert(duration);
+
+    JfrTimerEvent event = this.newEmptyEvent();
+    event.setDuration(units);
+    event.commit();
+
+    this.statistics.record(units);
   }
 
   @Override
