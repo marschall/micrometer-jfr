@@ -20,5 +20,11 @@ class AtomicDoubleTests {
     assertEquals(1.0d, this.atomicDouble.add(1.0d), 0.000001d);
     assertEquals(2.0d, this.atomicDouble.add(1.0d), 0.000001d);
   }
+  
+  @Test
+  void doubleValue() {
+    assertEquals(1.0d, this.atomicDouble.add(1.0d), 0.000001d);
+    assertEquals(1.0d, this.atomicDouble.doubleValue(), 0.000001d);
+  }
 
 }

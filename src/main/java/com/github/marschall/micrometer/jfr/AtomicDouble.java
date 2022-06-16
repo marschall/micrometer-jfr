@@ -38,7 +38,12 @@ final class AtomicDouble {
    * @see AtomicLong#longValue()
    */
   double doubleValue() {
-    return this.value;
+    return Double.longBitsToDouble(this.value);
+  }
+
+  @Override
+  public String toString() {
+    return Double.toString(this.doubleValue());
   }
 
 }
