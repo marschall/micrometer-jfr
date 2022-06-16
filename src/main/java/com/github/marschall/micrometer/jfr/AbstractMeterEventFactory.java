@@ -144,7 +144,10 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
     List<AnnotationElement> eventAnnotations = new ArrayList<>();
     eventAnnotations.add(new AnnotationElement(Name.class, this.id.getName()));
     eventAnnotations.add(new AnnotationElement(Label.class, CAPITALIZED_WORDS.tagKey(this.id.getName())));
-    eventAnnotations.add(new AnnotationElement(Description.class, this.id.getDescription()));
+    String description = this.id.getDescription();
+    if (description != null) {
+      eventAnnotations.add(new AnnotationElement(Description.class, description));
+    }
     eventAnnotations.add(new AnnotationElement(Category.class, category));
     eventAnnotations.add(new AnnotationElement(StackTrace.class, false));
     return eventAnnotations;

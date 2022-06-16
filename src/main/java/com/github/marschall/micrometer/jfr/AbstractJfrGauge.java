@@ -24,7 +24,7 @@ abstract class AbstractJfrGauge<T, F extends AbstractMeterEventFactory<E>, E ext
   public double value() {
     T obj = this.reference.get();
     double value;
-    if (this.reference != null) {
+    if (obj != null) {
       value = this.valueFunction.applyAsDouble(obj);
     } else {
       value = Double.NaN;
