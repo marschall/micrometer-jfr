@@ -1,5 +1,7 @@
 package com.github.marschall.micrometer.jfr;
 
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+
 import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +48,9 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
 
   @Override
   public void record(long amount, TimeUnit unit) {
+    if (amount < 0L) {
+      return;
+    }
     long units = this.baseTimeUnit().convert(amount, unit);
 
     JfrTimerEvent event = this.newEmptyEvent();
@@ -57,6 +62,9 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
 
   @Override
   public void record(Duration duration) {
+    if (duration.isNegative()) {
+      return;
+    }
     long units = this.baseTimeUnit().convert(duration);
 
     JfrTimerEvent event = this.newEmptyEvent();
@@ -77,6 +85,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
       event.end();
       long end = this.clock.monotonicTime();
       long duration = end - start;
+      this.statistics.record(this.baseTimeUnit().convert(duration, NANOSECONDS));
       event.setDuration(duration);
       event.commit();
     }
@@ -94,6 +103,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
       event.end();
       long end = this.clock.monotonicTime();
       long duration = end - start;
+      this.statistics.record(this.baseTimeUnit().convert(duration, NANOSECONDS));
       event.setDuration(duration);
       event.commit();
     }
@@ -110,6 +120,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
       event.end();
       long end = this.clock.monotonicTime();
       long duration = end - start;
+      this.statistics.record(this.baseTimeUnit().convert(duration, NANOSECONDS));
       event.setDuration(duration);
       event.commit();
     }
