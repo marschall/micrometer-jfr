@@ -48,6 +48,16 @@
     <tag>HEAD</tag>
   </scm>
 
+  <repositories>
+    <repository>
+      <id>spring-milestone</id>
+      <url>https://repo.spring.io/milestone</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
   <build>
     <plugins>
       <plugin>
@@ -233,7 +243,7 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-core</artifactId>
-      <version>1.9.0</version>
+      <version>1.10.0-M2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
