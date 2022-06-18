@@ -32,7 +32,7 @@ final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory,
     this.distributionStatisticConfig = distributionStatisticConfig;
     this.baseTimeUnit = baseTimeUnit;
     this.clock = clock;
-    this.statistics = new LongStatistics();
+    this.statistics = new FieldUpdaterLongStatistics();
     this.activeTasks = new LongAdder();
   }
 

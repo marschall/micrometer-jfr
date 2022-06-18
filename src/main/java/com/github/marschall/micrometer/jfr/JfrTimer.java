@@ -38,7 +38,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
     this.pauseDetector = pauseDetector;
     this.baseTimeUnit = baseTimeUnit;
     this.clock = clock;
-    this.statistics = new LongStatistics();
+    this.statistics = new FieldUpdaterLongStatistics();
   }
 
   @Override
