@@ -250,6 +250,17 @@
       <version>${micrometer.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- 
+      prevent the following error when generating javadoc
+      class file for javax.annotation.meta.When not found
+     -->
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>3.0.2</version>
+      <optional>true</optional>
+      <scope>provided</scope>
+  </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
