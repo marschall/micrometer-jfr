@@ -26,10 +26,4 @@ class AbstractMeterEventFactoryTests {
     assertThrows(IllegalArgumentException.class, () -> AbstractMeterEventFactory.mapTimeUnitToTimespan(TimeUnit.DAYS));
   }
 
-  @Test
-  void tagKeys() {
-    assertEquals("Job Name", AbstractMeterEventFactory.CAPITALIZED_WORDS.tagKey("job.name"));
-    assertEquals("Status", AbstractMeterEventFactory.CAPITALIZED_WORDS.tagKey("status"));
-  }
-
 }

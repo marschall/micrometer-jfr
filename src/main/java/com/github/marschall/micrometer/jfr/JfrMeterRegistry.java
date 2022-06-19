@@ -28,21 +28,36 @@ import io.micrometer.core.lang.Nullable;
  */
 public final class JfrMeterRegistry extends MeterRegistry {
 
+  private final JfrConfig configuration;
+
+  private final LongStatisticsFactory longStatisticsFactory;
+
   /**
-   * Default constructor using the given clock.
+   * Constructor using the given clock and configuration.
    *
    * @param clock the clock to use, not {@code null}
+   * @param configuration the configuration to use, not {@code configuration}
    */
-  public JfrMeterRegistry(Clock clock) {
+  JfrMeterRegistry(Clock clock, JfrConfig configuration) {
     super(clock);
     Objects.requireNonNull(clock, "clock");
+    Objects.requireNonNull(configuration, "configuration");
+    this.configuration = configuration;
+    this.longStatisticsFactory = LongStatisticsFactory.newInstance(configuration.statisticsMode());
   }
 
   /**
-   * Default constructor using the system clock.
+   * Default constructor using the system clock and the default configuration.
    */
   public JfrMeterRegistry() {
-    this(Clock.SYSTEM);
+    this(Clock.SYSTEM, JfrConfig.DEFAULT);
+  }
+
+  /**
+   * Constructor using the default configuration.
+   */
+  public JfrMeterRegistry(JfrConfig configuration) {
+    this(Clock.SYSTEM, configuration);
   }
 
   @Override
@@ -66,23 +81,23 @@ public final class JfrMeterRegistry extends MeterRegistry {
 
   @Override
   protected Timer newTimer(Id id, DistributionStatisticConfig distributionStatisticConfig, PauseDetector pauseDetector) {
-    return new JfrTimer(id, distributionStatisticConfig, pauseDetector, this.getBaseTimeUnit(), this.clock);
+    return new JfrTimer(id, distributionStatisticConfig, this.getBaseTimeUnit(), this.clock, this.longStatisticsFactory);
   }
 
   @Override
   protected LongTaskTimer newLongTaskTimer(Id id, DistributionStatisticConfig distributionStatisticConfig) {
-    return new JfrLongTaskTimer(id, distributionStatisticConfig, this.getBaseTimeUnit(), this.clock);
+    return new JfrLongTaskTimer(id, this.getBaseTimeUnit(), this.clock, this.longStatisticsFactory);
   }
 
   @Override
   @Deprecated
   protected LongTaskTimer newLongTaskTimer(Id id) {
-    return this.newLongTaskTimer(id, null);
+    return this.newLongTaskTimer(id, defaultHistogramConfig());
   }
 
   @Override
   protected DistributionSummary newDistributionSummary(Id id, DistributionStatisticConfig distributionStatisticConfig, double scale) {
-    return new JfrDistributionSummary(id, distributionStatisticConfig, scale);
+    return new JfrDistributionSummary(id, scale);
   }
 
   @Override

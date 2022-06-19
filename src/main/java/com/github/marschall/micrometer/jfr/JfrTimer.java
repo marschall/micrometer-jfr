@@ -21,24 +21,20 @@ import io.micrometer.core.instrument.TimeGauge;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
-import io.micrometer.core.instrument.distribution.pause.PauseDetector;
 import io.micrometer.core.instrument.util.TimeUtils;
 
 final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> implements Timer {
 
-  private final DistributionStatisticConfig distributionStatisticConfig;
-  private final PauseDetector pauseDetector;
   private final TimeUnit baseTimeUnit;
   private final LongStatistics statistics;
   private final Clock clock;
 
-  JfrTimer(Id id, DistributionStatisticConfig distributionStatisticConfig, PauseDetector pauseDetector, TimeUnit baseTimeUnit, Clock clock) {
+  JfrTimer(Id id, DistributionStatisticConfig distributionStatisticConfig, TimeUnit baseTimeUnit, Clock clock,
+      LongStatisticsFactory longStatisticsFactory) {
     super(id, new TimerEventFactory(id, baseTimeUnit));
-    this.distributionStatisticConfig = distributionStatisticConfig;
-    this.pauseDetector = pauseDetector;
     this.baseTimeUnit = baseTimeUnit;
     this.clock = clock;
-    this.statistics = new FieldUpdaterLongStatistics();
+    this.statistics = longStatisticsFactory.newLongStatistics();
   }
 
   @Override

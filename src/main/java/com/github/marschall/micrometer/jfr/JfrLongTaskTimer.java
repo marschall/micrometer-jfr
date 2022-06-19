@@ -15,24 +15,21 @@ import io.micrometer.core.instrument.LongTaskTimer;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.TimeGauge;
 import io.micrometer.core.instrument.Timer;
-import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 import io.micrometer.core.instrument.util.TimeUtils;
 
 final class JfrLongTaskTimer extends AbstractJfrMeter<LongTaskTimerEventFactory, JfrLongTaskTimerEvent> implements LongTaskTimer {
 
-  private final DistributionStatisticConfig distributionStatisticConfig;
   private final TimeUnit baseTimeUnit;
   private final LongStatistics statistics;
   private final LongAdder activeTasks;
   private final Clock clock;
 
-  JfrLongTaskTimer(Id id, DistributionStatisticConfig distributionStatisticConfig, TimeUnit baseTimeUnit, Clock clock) {
+  JfrLongTaskTimer(Id id, TimeUnit baseTimeUnit, Clock clock, LongStatisticsFactory longStatisticsFactory) {
     super(id, new LongTaskTimerEventFactory(id, baseTimeUnit));
-    this.distributionStatisticConfig = distributionStatisticConfig;
     this.baseTimeUnit = baseTimeUnit;
     this.clock = clock;
-    this.statistics = new FieldUpdaterLongStatistics();
+    this.statistics = longStatisticsFactory.newLongStatistics();
     this.activeTasks = new LongAdder();
   }
 

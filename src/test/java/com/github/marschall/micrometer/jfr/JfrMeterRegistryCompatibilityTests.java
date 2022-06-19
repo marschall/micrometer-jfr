@@ -13,7 +13,13 @@ class JfrMeterRegistryCompatibilityTests extends MeterRegistryCompatibilityKit {
 
   @Override
   public MeterRegistry registry() {
-    return new JfrMeterRegistry(new MockClock());
+    return new JfrMeterRegistry(new MockClock(), new JfrConfig() {
+
+      @Override
+      public String get(String key) {
+        return null;
+      }
+    });
   }
 
   @Override

@@ -6,10 +6,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import io.micrometer.core.instrument.Meter.Id;
-import io.micrometer.core.instrument.Meter.Type;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.binder.BaseUnits;
-import io.micrometer.core.instrument.config.NamingConvention;
 import io.micrometer.core.lang.Nullable;
 import jdk.jfr.AnnotationElement;
 import jdk.jfr.Category;
@@ -30,40 +28,6 @@ import jdk.jfr.ValueDescriptor;
  * event definitions.
  */
 abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
-
-  static final NamingConvention CAPITALIZED_WORDS = new NamingConvention() {
-    @Override
-    public String name(String name, Type type, @Nullable String baseUnit) {
-      if (name.isEmpty()) {
-        return name;
-      }
-
-      String[] parts = name.split("\\.");
-      StringBuilder conventionName = new StringBuilder(name.length());
-      for (int i = 0; i < parts.length; i++) {
-        if (i > 0) {
-          conventionName.append(' ');
-        }
-        String part = parts[i];
-        char firstChar = part.charAt(0);
-        if (Character.isLowerCase(firstChar)) {
-          conventionName.append(Character.toUpperCase(firstChar));
-          conventionName.append(part, 1, part.length());
-        } else {
-          conventionName.append(part);
-        }
-      }
-
-      name.charAt(0);
-      return conventionName.toString();
-    }
-
-    @Override
-    public String tagKey(String key) {
-      return this.name(key, null, null);
-    }
-
-  };
 
   protected final Id id;
 
@@ -132,7 +96,7 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
   private List<ValueDescriptor> getTagValueDescriptors() {
     List<ValueDescriptor> fields = new ArrayList<>();
     for (Tag tag : this.id.getTagsAsIterable()) {
-      List<AnnotationElement> tagAnnotations = List.of(new AnnotationElement(Label.class, CAPITALIZED_WORDS.tagKey(tag.getKey())));
+      List<AnnotationElement> tagAnnotations = List.of(new AnnotationElement(Label.class, CapitalizedWords.IINSTANCE.tagKey(tag.getKey())));
       ValueDescriptor valueDescriptor = new ValueDescriptor(String.class, tag.getKey(), tagAnnotations);
       fields.add(valueDescriptor);
     }
@@ -143,7 +107,7 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
     String[] category = { "Micrometer" };
     List<AnnotationElement> eventAnnotations = new ArrayList<>();
     eventAnnotations.add(new AnnotationElement(Name.class, this.id.getName()));
-    eventAnnotations.add(new AnnotationElement(Label.class, CAPITALIZED_WORDS.tagKey(this.id.getName())));
+    eventAnnotations.add(new AnnotationElement(Label.class, CapitalizedWords.IINSTANCE.tagKey(this.id.getName())));
     String description = this.id.getDescription();
     if (description != null) {
       eventAnnotations.add(new AnnotationElement(Description.class, description));

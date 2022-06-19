@@ -47,3 +47,10 @@ The frequency of polled meters like `FunctionCounter` have to be configured in a
   <setting name="period">5 s</setting>
 </event>
 ```
+
+Compliance
+----------
+
+We do not pass all tests in `MeterRegistryCompatibilityKit`. The main issue is that we do not implement histograms for `Timer`, `LongTaskTimer` and `DistributionSummary`. Instead we always generate a JFR event and let the consumer process and aggregate as desired.
+
+In addition we do not support `PauseDetector` in `Timer`, we recommend you generate JFR events should the existing ones not be sufficient.

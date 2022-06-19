@@ -12,18 +12,15 @@ import io.micrometer.core.instrument.LongTaskTimer;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.TimeGauge;
 import io.micrometer.core.instrument.Timer;
-import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 
 final class JfrDistributionSummary extends AbstractJfrMeter<DistributionSummaryEventFactory, JfrDistributionSummaryEvent> implements DistributionSummary {
 
-  private final DistributionStatisticConfig distributionStatisticConfig;
   private final double scale;
   private final DoubleStatistics statistics;
 
-  JfrDistributionSummary(Id id, DistributionStatisticConfig distributionStatisticConfig, double scale) {
+  JfrDistributionSummary(Id id, double scale) {
     super(id, new DistributionSummaryEventFactory(id));
-    this.distributionStatisticConfig = distributionStatisticConfig;
     this.scale = scale;
     this.statistics = new DoubleStatistics();
   }
