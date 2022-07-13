@@ -14,6 +14,9 @@ import io.micrometer.core.instrument.config.validate.Validated;
  */
 public interface JfrConfig extends MeterRegistryConfig {
 
+  /**
+   * Default configuration.
+   */
   JfrConfig DEFAULT = k -> null;
 
   @Override

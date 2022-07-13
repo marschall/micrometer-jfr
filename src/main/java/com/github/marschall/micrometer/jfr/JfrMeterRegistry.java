@@ -54,7 +54,9 @@ public final class JfrMeterRegistry extends MeterRegistry {
   }
 
   /**
-   * Constructor using the default configuration.
+   * Constructor using the given configuration.
+   * 
+   * @param configuration the configuration to use, not {@code configuration}
    */
   public JfrMeterRegistry(JfrConfig configuration) {
     this(Clock.SYSTEM, configuration);
