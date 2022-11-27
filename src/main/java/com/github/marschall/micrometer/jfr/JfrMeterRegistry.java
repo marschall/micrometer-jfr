@@ -21,7 +21,7 @@ import io.micrometer.core.instrument.TimeGauge;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.pause.PauseDetector;
-import io.micrometer.core.lang.Nullable;
+import io.micrometer.common.lang.Nullable;
 
 /**
  * A Micrometer meter registry that generates JFR events for metrics.

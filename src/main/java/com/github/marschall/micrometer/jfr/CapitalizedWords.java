@@ -2,7 +2,7 @@ package com.github.marschall.micrometer.jfr;
 
 import io.micrometer.core.instrument.Meter.Type;
 import io.micrometer.core.instrument.config.NamingConvention;
-import io.micrometer.core.lang.Nullable;
+import io.micrometer.common.lang.Nullable;
 
 final class CapitalizedWords implements NamingConvention {
 
