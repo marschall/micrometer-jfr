@@ -82,7 +82,7 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.jboss.jandex</groupId>
+        <groupId>io.smallrye</groupId>
         <artifactId>jandex-maven-plugin</artifactId>
         <executions>
           <execution>
@@ -112,6 +112,7 @@
             <link>https://javadoc.io/doc/io.micrometer/micrometer-core/latest/</link>
           </links>
           <source>11</source>
+          <notimestamp>true</notimestamp>
         </configuration>
         <executions>
           <execution>
@@ -153,6 +154,10 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <artifactId>maven-artifact-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+        <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.2.0</version>
         </plugin>
@@ -178,9 +183,9 @@
           <version>3.1.0</version>
         </plugin>
         <plugin>
-          <groupId>org.jboss.jandex</groupId>
+          <groupId>io.smallrye</groupId>
           <artifactId>jandex-maven-plugin</artifactId>
-          <version>1.2.3</version>
+          <version>3.0.5</version>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
@@ -192,7 +197,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.3</version>
+          <version>3.0.0-M7</version>
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
@@ -212,7 +217,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
+          <version>3.0.0-M8</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -223,7 +228,7 @@
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
-        <version>5.9.1</version>
+        <version>5.9.2</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -327,7 +332,8 @@
   <properties>
     <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-    <micrometer.version>1.10.2</micrometer.version>
+    <project.build.outputTimestamp>2023-01-01T00:00:00Z</project.build.outputTimestamp>
+    <micrometer.version>1.10.3</micrometer.version>
   </properties>
 
 </project>
