@@ -14,7 +14,7 @@ Metrics.addRegistry(new JfrMeterRegistry());
 <dependency>
   <groupId>com.github.marschall</groupId>
   <artifactId>micrometer-jfr</artifactId>
-  <version>1.9.1</version>
+  <version>1.11.0</version>
 </dependency>
 ```
 
