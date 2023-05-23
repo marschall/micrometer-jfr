@@ -1,4 +1,4 @@
-Micrometer JFR [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/micrometer-jfr/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/micrometer-jfr) [![Javadocs](https://www.javadoc.io/badge/com.github.marschall/micrometer-jfr.svg)](https://www.javadoc.io/doc/com.github.marschall/micrometer-jfr) [![Build Status](https://travis-ci.org/marschall/micrometer-jfr.svg?branch=master)](https://travis-ci.org/marschall/micrometer-jfr)
+Micrometer JFR [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/micrometer-jfr/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/micrometer-jfr) [![Javadocs](https://www.javadoc.io/badge/com.github.marschall/micrometer-jfr.svg)](https://www.javadoc.io/doc/com.github.marschall/micrometer-jfr)
 ==============
 
 A [Micrometer](https://micrometer.io/) meter registry that generates [JFR](https://openjdk.java.net/jeps/328) events.
