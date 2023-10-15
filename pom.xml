@@ -155,7 +155,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-artifact-plugin</artifactId>
-          <version>3.4.1</version>
+          <version>3.5.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -185,7 +185,7 @@
         <plugin>
           <groupId>io.smallrye</groupId>
           <artifactId>jandex-maven-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.1.5</version>
         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
@@ -193,7 +193,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.6.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
@@ -333,7 +333,7 @@
     <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
     <project.build.outputTimestamp>2023-05-18T11:56:31Z</project.build.outputTimestamp>
-    <micrometer.version>1.11.2</micrometer.version>
+    <micrometer.version>1.11.5</micrometer.version>
   </properties>
 
 </project>
