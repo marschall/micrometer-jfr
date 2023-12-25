@@ -28,7 +28,7 @@ Features
 - Maps `Id#getName()` and `Id#getDescription()` to `@Name` and `@Description`.
 - Stacktraces are disabled for all events for reduced overhead.
 - Generates a JFR event for every metered value.
-- A custom [naming convention](https://micrometer.io/docs/concepts#_naming_meters) is used to translate tag names to capitalized words.
+- A custom [naming convention](https://docs.micrometer.io/micrometer/reference/concepts/naming.html) is used to translate tag names to capitalized words.
 
 Limitations
 -----------
