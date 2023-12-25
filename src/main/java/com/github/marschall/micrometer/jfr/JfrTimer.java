@@ -5,8 +5,12 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.Function;
+import java.util.function.IntSupplier;
+import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 import io.micrometer.core.instrument.Clock;
@@ -78,12 +82,64 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
     try {
       return f.get();
     } finally {
-      event.end();
-      long end = this.clock.monotonicTime();
-      long duration = end - start;
-      this.statistics.record(this.baseTimeUnit().convert(duration, NANOSECONDS));
-      event.setDuration(duration);
-      event.commit();
+      recordDuration(start, event);
+    }
+  }
+
+  private void recordDuration(long start, JfrTimerEvent event) {
+    event.end();
+    long end = this.clock.monotonicTime();
+    long duration = end - start;
+    this.statistics.record(this.baseTimeUnit().convert(duration, NANOSECONDS));
+    event.setDuration(duration);
+    event.commit();
+  }
+
+  @Override
+  public boolean record(BooleanSupplier f) {
+    JfrTimerEvent event = this.newEmptyEvent();
+    long start = this.clock.monotonicTime();
+    event.begin();
+    try {
+      return f.getAsBoolean();
+    } finally {
+      recordDuration(start, event);
+    }
+  }
+
+  @Override
+  public int record(IntSupplier f) {
+    JfrTimerEvent event = this.newEmptyEvent();
+    long start = this.clock.monotonicTime();
+    event.begin();
+    try {
+      return f.getAsInt();
+    } finally {
+      recordDuration(start, event);
+    }
+  }
+
+  @Override
+  public long record(LongSupplier f) {
+    JfrTimerEvent event = this.newEmptyEvent();
+    long start = this.clock.monotonicTime();
+    event.begin();
+    try {
+      return f.getAsLong();
+    } finally {
+      recordDuration(start, event);
+    }
+  }
+
+  @Override
+  public double record(DoubleSupplier f) {
+    JfrTimerEvent event = this.newEmptyEvent();
+    long start = this.clock.monotonicTime();
+    event.begin();
+    try {
+      return f.getAsDouble();
+    } finally {
+      recordDuration(start, event);
     }
   }
 
@@ -96,12 +152,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
     try {
       return f.call();
     } finally {
-      event.end();
-      long end = this.clock.monotonicTime();
-      long duration = end - start;
-      this.statistics.record(this.baseTimeUnit().convert(duration, NANOSECONDS));
-      event.setDuration(duration);
-      event.commit();
+      recordDuration(start, event);
     }
   }
 
@@ -113,12 +164,7 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
     try {
       f.run();
     } finally {
-      event.end();
-      long end = this.clock.monotonicTime();
-      long duration = end - start;
-      this.statistics.record(this.baseTimeUnit().convert(duration, NANOSECONDS));
-      event.setDuration(duration);
-      event.commit();
+      recordDuration(start, event);
     }
   }
 
@@ -137,6 +183,15 @@ final class JfrTimer extends AbstractJfrMeter<TimerEventFactory, JfrTimerEvent> 
   public double max(TimeUnit destinationUnit) {
     long max = this.statistics.max();
     return TimeUtils.convert(max, this.baseTimeUnit(), destinationUnit);
+  }
+
+  @Override
+  public double mean(TimeUnit unit) {
+    long count = this.statistics.count();
+    if (count == 0L) {
+      return 0L;
+    }
+    return totalTime(unit) / count;
   }
 
   @Override
