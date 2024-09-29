@@ -4,7 +4,7 @@
 
   <groupId>com.github.marschall</groupId>
   <artifactId>micrometer-jfr</artifactId>
-  <version>1.13.0</version>
+  <version>1.13.1-SNAPSHOT</version>
   <inceptionYear>2020</inceptionYear>
   <url>https://github.com/marschall/micrometer-jfr</url>
   <name>Micrometer JFR</name>
@@ -45,7 +45,7 @@
     <connection>scm:git:git@github.com:marschall/micrometer-jfr.git</connection>
     <developerConnection>scm:git:git@github.com:marschall/micrometer-jfr.git</developerConnection>
     <url>${project.url}</url>
-    <tag>1.13.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <build>
@@ -332,7 +332,7 @@
   <properties>
     <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-    <project.build.outputTimestamp>2024-09-29T14:49:14Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-09-29T14:49:32Z</project.build.outputTimestamp>
     <micrometer.version>1.13.4</micrometer.version>
   </properties>
 
