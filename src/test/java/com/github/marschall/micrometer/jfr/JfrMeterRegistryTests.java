@@ -168,7 +168,7 @@ class JfrMeterRegistryTests {
             Tag.of("name", "cleanup"), Tag.of("status", "ok"));
 
     counter.increment();
-    counter.increment();
+    counter.increment(3.0d);
   }
 
   @Test
@@ -260,6 +260,16 @@ class JfrMeterRegistryTests {
     Thread.sleep(500L);
 
     longTaskTimerSample.stop();
+  }
+
+  @Test
+  void createLongTaskTimerRecord() throws Exception {
+    LongTaskTimer longTaskTimer = createLongTaskTimer("longTaskTimer", "Long Task Timer");
+
+    longTaskTimer.recordCallable(() -> {
+      Thread.sleep(500L);
+      return null;
+    });
   }
 
   private static Timer createTimer(String name, String description, Tag... tags) {
