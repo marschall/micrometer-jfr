@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import io.micrometer.common.lang.Nullable;
+import org.jspecify.annotations.Nullable;
+
 import io.micrometer.core.instrument.Meter.Id;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.binder.BaseUnits;

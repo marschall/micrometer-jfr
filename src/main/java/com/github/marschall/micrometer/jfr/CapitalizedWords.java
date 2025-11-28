@@ -1,8 +1,9 @@
 package com.github.marschall.micrometer.jfr;
 
+import org.jspecify.annotations.Nullable;
+
 import io.micrometer.core.instrument.Meter.Type;
 import io.micrometer.core.instrument.config.NamingConvention;
-import io.micrometer.common.lang.Nullable;
 
 final class CapitalizedWords implements NamingConvention {
 

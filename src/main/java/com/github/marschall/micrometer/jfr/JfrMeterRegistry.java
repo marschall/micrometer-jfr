@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToLongFunction;
 
+import org.jspecify.annotations.Nullable;
+
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.DistributionSummary;
@@ -21,7 +23,6 @@ import io.micrometer.core.instrument.TimeGauge;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
 import io.micrometer.core.instrument.distribution.pause.PauseDetector;
-import io.micrometer.common.lang.Nullable;
 
 /**
  * A Micrometer meter registry that generates JFR events for metrics.
@@ -55,7 +56,7 @@ public final class JfrMeterRegistry extends MeterRegistry {
 
   /**
    * Constructor using the given configuration.
-   * 
+   *
    * @param configuration the configuration to use, not {@code configuration}
    */
   public JfrMeterRegistry(JfrConfig configuration) {
