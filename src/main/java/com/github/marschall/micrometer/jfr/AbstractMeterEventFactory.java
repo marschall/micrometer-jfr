@@ -97,7 +97,7 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
   private List<ValueDescriptor> getTagValueDescriptors() {
     List<ValueDescriptor> fields = new ArrayList<>();
     for (Tag tag : this.id.getTagsAsIterable()) {
-      String key = tag.getKey() ; //.replaceAll("\\.", "_");
+      String key = tag.getKey().replaceAll("\\.", "_");
 	  List<AnnotationElement> tagAnnotations = List.of(new AnnotationElement(Label.class, CapitalizedWords.IINSTANCE.tagKey(key)));
       ValueDescriptor valueDescriptor = new ValueDescriptor(String.class, key, tagAnnotations);
       fields.add(valueDescriptor);
