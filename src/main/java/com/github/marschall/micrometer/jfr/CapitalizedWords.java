@@ -31,7 +31,6 @@ final class CapitalizedWords implements NamingConvention {
       }
     }
 
-    name.charAt(0);
     return conventionName.toString();
   }
 
