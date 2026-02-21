@@ -54,3 +54,37 @@ Compliance
 We do not pass all tests in `MeterRegistryCompatibilityKit`. The main issue is that we do not implement histograms for `Timer`, `LongTaskTimer` and `DistributionSummary`. Instead we always generate a JFR event and let the consumer process and aggregate as desired.
 
 In addition we do not support `PauseDetector` in `Timer`, we recommend you generate JFR events should the existing ones not be sufficient.
+
+Building
+--------
+
+You need to have [Maven Toolchains](https://maven.apache.org/guides/mini/guide-using-toolchains.html) set up for JDK 11 and JDK 21.
+
+I.e. a `~/.m2/toolchains.xml` similar to
+
+```xml
+<?xml version="1.0" encoding="UTF8"?>
+<toolchains>
+  <toolchain>
+     <type>jdk</type>
+     <provides>
+         <version>21</version>
+         <vendor>Ubuntu</vendor>
+     </provides>
+     <configuration>
+        <jdkHome>/opt/java/jdk-21</jdkHome>
+     </configuration>
+  </toolchain>
+  <toolchain>
+     <type>jdk</type>
+     <provides>
+         <version>11</version>
+         <vendor>Ubuntu</vendor>
+     </provides>
+     <configuration>
+        <jdkHome>/opt/java/jdk-11</jdkHome>
+     </configuration>
+  </toolchain>
+</toolchains>
+```
+

@@ -77,7 +77,7 @@
       <version>3.0.2</version>
       <optional>true</optional>
       <scope>provided</scope>
-  </dependency>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -101,7 +101,18 @@
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-jcl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
+      <scope>test</scope>
+    </dependency>
+      <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+      <version>3.2.3</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -203,7 +214,6 @@
             <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
             <link>https://javadoc.io/doc/io.micrometer/micrometer-core/latest/</link>
           </links>
-          <source>11</source>
           <notimestamp>true</notimestamp>
         </configuration>
         <executions>
@@ -234,6 +244,30 @@
              --add-opens micrometer.jfr/com.github.marschall.micrometer.jfr=ALL-UNNAMED
            </argLine>
          </configuration>
+        <executions>
+          <!-- run with module path -->
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <configuration>
+              <jdkToolchain>
+                <version>11</version>
+              </jdkToolchain>
+            </configuration>
+          </execution>
+          <execution>
+            <id>jdk21-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <jdkToolchain>
+                <version>21</version>
+              </jdkToolchain>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
