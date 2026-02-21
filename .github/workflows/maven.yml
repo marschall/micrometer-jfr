@@ -17,25 +17,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ '11', '25' ]
-    name: Java ${{ matrix.Java }} sample
+    name: Maven toolchain build
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 11
+    - name: Set up JDKs
       uses: actions/setup-java@v4
       with:
-        java-version: ${{ matrix.java }}
         distribution: 'zulu'
+        java-version: |
+          11
+          21
         cache: maven
-    - uses: cactuslab/maven-toolchains-xml-action@v1
-      with:
-       toolchains: |
-        [
-          {"jdkVersion": ${{ matrix.java }}, "jdkHome": "${{steps.setupJava.outputs.path}}"}
-        ]
-    - name: Build with Maven
+    - name: Maven verify
       run: mvn --batch-mode --no-transfer-progress verify
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
