@@ -7,7 +7,7 @@ import io.micrometer.core.instrument.config.NamingConvention;
 
 final class CapitalizedWords implements NamingConvention {
 
-  static final NamingConvention IINSTANCE = new CapitalizedWords();
+  static final NamingConvention INSTANCE = new CapitalizedWords();
 
   @Override
   public String name(String name, Type type, @Nullable String baseUnit) {

@@ -13,7 +13,7 @@ class CapitalizedWordsTests {
 
   @BeforeEach
   void setUp() {
-    this.convention = CapitalizedWords.IINSTANCE;
+    this.convention = CapitalizedWords.INSTANCE;
   }
 
   @Test

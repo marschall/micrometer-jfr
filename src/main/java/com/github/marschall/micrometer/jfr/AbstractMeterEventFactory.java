@@ -97,7 +97,7 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
   private List<ValueDescriptor> getTagValueDescriptors() {
     List<ValueDescriptor> fields = new ArrayList<>();
     for (Tag tag : this.id.getTagsAsIterable()) {
-      List<AnnotationElement> tagAnnotations = List.of(new AnnotationElement(Label.class, CapitalizedWords.IINSTANCE.tagKey(tag.getKey())));
+      List<AnnotationElement> tagAnnotations = List.of(new AnnotationElement(Label.class, CapitalizedWords.INSTANCE.tagKey(tag.getKey())));
       ValueDescriptor valueDescriptor = new ValueDescriptor(String.class, tag.getKey(), tagAnnotations);
       fields.add(valueDescriptor);
     }
@@ -108,7 +108,7 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
     String[] category = { "Micrometer" };
     List<AnnotationElement> eventAnnotations = new ArrayList<>();
     eventAnnotations.add(new AnnotationElement(Name.class, this.id.getName()));
-    eventAnnotations.add(new AnnotationElement(Label.class, CapitalizedWords.IINSTANCE.tagKey(this.id.getName())));
+    eventAnnotations.add(new AnnotationElement(Label.class, CapitalizedWords.INSTANCE.tagKey(this.id.getName())));
     String description = this.id.getDescription();
     if (description != null) {
       eventAnnotations.add(new AnnotationElement(Description.class, description));
