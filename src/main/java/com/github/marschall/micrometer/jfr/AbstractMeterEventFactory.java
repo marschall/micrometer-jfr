@@ -1,5 +1,8 @@
 package com.github.marschall.micrometer.jfr;
 
+import static com.github.marschall.micrometer.jfr.CapitalizedWords.CAPITALIZED_WORDS;
+import static io.micrometer.core.instrument.config.NamingConvention.camelCase;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -97,8 +100,12 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
   private List<ValueDescriptor> getTagValueDescriptors() {
     List<ValueDescriptor> fields = new ArrayList<>();
     for (Tag tag : this.id.getTagsAsIterable()) {
-      List<AnnotationElement> tagAnnotations = List.of(new AnnotationElement(Label.class, CapitalizedWords.INSTANCE.tagKey(tag.getKey())));
-      ValueDescriptor valueDescriptor = new ValueDescriptor(String.class, tag.getKey(), tagAnnotations);
+      String label = CAPITALIZED_WORDS.tagKey(tag.getKey());
+      List<AnnotationElement> tagAnnotations = List.of(new AnnotationElement(Label.class, label));
+      // name has to be a valid Java identifier
+      // see JDK-8272515
+      String name = camelCase.tagKey(tag.getKey());
+      ValueDescriptor valueDescriptor = new ValueDescriptor(String.class, name, tagAnnotations);
       fields.add(valueDescriptor);
     }
     return fields;
@@ -108,7 +115,8 @@ abstract class AbstractMeterEventFactory<E extends AbstractJfrMeterEvent> {
     String[] category = { "Micrometer" };
     List<AnnotationElement> eventAnnotations = new ArrayList<>();
     eventAnnotations.add(new AnnotationElement(Name.class, this.id.getName()));
-    eventAnnotations.add(new AnnotationElement(Label.class, CapitalizedWords.INSTANCE.tagKey(this.id.getName())));
+    String label = CAPITALIZED_WORDS.tagKey(this.id.getName());
+    eventAnnotations.add(new AnnotationElement(Label.class, label));
     String description = this.id.getDescription();
     if (description != null) {
       eventAnnotations.add(new AnnotationElement(Description.class, description));

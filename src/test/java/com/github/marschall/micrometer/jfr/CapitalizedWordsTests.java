@@ -1,5 +1,6 @@
 package com.github.marschall.micrometer.jfr;
 
+import static com.github.marschall.micrometer.jfr.CapitalizedWords.CAPITALIZED_WORDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,7 @@ class CapitalizedWordsTests {
 
   @BeforeEach
   void setUp() {
-    this.convention = CapitalizedWords.INSTANCE;
+    this.convention = CAPITALIZED_WORDS;
   }
 
   @Test
